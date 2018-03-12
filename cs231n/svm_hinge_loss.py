@@ -83,8 +83,8 @@ def svm_hinge_loss_vectorized(W,X,y,lambda_val):
              sample0 sample1 ...                  class0 class1
     feature0  res0     res1               sample0
     feature1                              sample1
-    res0:对于class0 来说，feature0要加的总值。总值=各sub总值求和。sub总值为单值乘以次数。
-    res1:对于class1 来说，feature0要加的总值。总值=各sub总值求和。sub总值为单值乘以次数。
+    res0:对于class0 来说，feature0对应的weight要加的总值。总值=各sub总值求和。sub总值为单值乘以次数。
+    res1:对于class1 来说，feature0对应的weight要加的总值。总值=各sub总值求和。sub总值为单值乘以次数。
     """
     #X.T记录要加的值，margins记录要加的次数
     dW += np.dot(X.T,margins)/num_train +lambda_val*W
