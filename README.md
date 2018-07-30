@@ -1,2 +1,39 @@
-# python--machine learning--practice
---fork 231n
+# machine learning--practice
+-- cs231n
+
+
+
+
+
+-- cs224d
+
+
+
+
+
+
+
+-- machine learning coursera
+
+https://kifish.visualstudio.com/_git/pieces?path=%2Fmatlab%2FMachine%20Learing%2Fcoursera-machine%20learing%2Fex2---logistic%20regression&version=GBmaster
+
+matlab:
+linear regression
+logistic regression
+nn,bp
+regularization
+svm,visual 
+pca,kmeans
+anomaly detection,recommendation systems
+apriori
+knn
+logistic regression,cross validation
+nn,trick train
+pca
+svm
+
+
+
+
+
+
