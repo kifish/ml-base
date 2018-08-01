@@ -18,7 +18,7 @@ https://kifish.github.io/2018/04/27/python-kmeans/
 
 -- machine learning coursera
 
-https://kifish.visualstudio.com/_git/pieces?path=%2Fmatlab%2FMachine%20Learing%2Fcoursera-machine%20learing%2Fex2---logistic%20regression&version=GBmaster
+
 ```
 matlab:
 linear regression
@@ -28,6 +28,9 @@ regularization
 svm,visual 
 pca,kmeans
 anomaly detection,recommendation systems
+
+https://kifish.visualstudio.com/_git/pieces?path=%2Fmatlab%2FMachine%20Learing%2Fcoursera-machine%20learing%2Fex2---logistic%20regression&version=GBmaster
+
 apriori
 knn
 logistic regression,cross validation
