@@ -1,6 +1,6 @@
 from svm_hinge_loss import *
 from softmax_loss import *
-
+import numpy as np
 class LinearClassifier(object):
     def __init__(self):
         self.W = None
