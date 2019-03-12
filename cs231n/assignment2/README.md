@@ -103,6 +103,23 @@ The IPython notebook `FullyConnectedNets.ipynb` will introduce you to our
 modular layer design, and then use those layers to implement fully-connected
 networks of arbitrary depth. To optimize these models you will implement several
 popular update rules.
+```PY
+class FullyConnectedNet(object):
+  """
+  A fully-connected neural network with an arbitrary number of hidden layers,
+  ReLU nonlinearities, and a softmax loss function. This will also implement
+  dropout and batch normalization as options. For a network with L layers,
+  the architecture will be
+  convolution + batch normalization + relu + dropout
+  {affine - [batch norm] - relu - [dropout]} x (L - 1) - affine - softmax
+  
+  where batch normalization and dropout are optional, and the {...} block is
+  repeated L - 1 times.
+  
+  Similar to the TwoLayerNet above, learnable parameters are stored in the
+  self.params dictionary and will be learned using the Solver class.
+  """
+```
 
 ### Q2: Batch Normalization (30 points)
 In the IPython notebook `BatchNormalization.ipynb` you will implement batch

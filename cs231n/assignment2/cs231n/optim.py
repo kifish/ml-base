@@ -40,6 +40,11 @@ def sgd(w, dw, config=None):
   if config is None: config = {}
   config.setdefault('learning_rate', 1e-2)
 
+  # print(w.shape)  #(100,)
+  # print(dw.shape) #(1, 100)
+  # ensure the same shape，要修正这个bug的话，见layers.py的affine_backward函数。
+  dw = np.reshape(dw, w.shape)
+  # bias即b有可能是列向量，db有可能是行向量
   w -= config['learning_rate'] * dw
   return w, config
 
@@ -65,7 +70,11 @@ def sgd_momentum(w, dw, config=None):
   # TODO: Implement the momentum update formula. Store the updated value in   #
   # the next_w variable. You should also use and update the velocity v.       #
   #############################################################################
-  pass
+  dw = np.reshape(dw, w.shape)  # ensure the same shape
+  momentum, learning_rate = config['momentum'],config['learning_rate']
+  v = momentum * v - learning_rate * dw 
+  w += v 
+  next_w = w
   #############################################################################
   #                             END OF YOUR CODE                              #
   #############################################################################
@@ -99,7 +108,13 @@ def rmsprop(x, dx, config=None):
   # in the next_x variable. Don't forget to update cache value stored in      #  
   # config['cache'].                                                          #
   #############################################################################
-  pass
+  dx = np.reshape(dx, x.shape)  # fix
+  decay_rate, cache, learning_rate, epsilon = config['decay_rate'], \
+      config['cache'], config['learning_rate'], config['epsilon']
+  cache = decay_rate*cache + (1-decay_rate)*(dx**2)
+  x += -learning_rate*dx / (np.sqrt(cache) + epsilon)
+  config['cache'] = cache
+  next_x = x 
   #############################################################################
   #                             END OF YOUR CODE                              #
   #############################################################################
@@ -136,7 +151,17 @@ def adam(x, dx, config=None):
   # the next_x variable. Don't forget to update the m, v, and t variables     #
   # stored in config.                                                         #
   #############################################################################
-  pass
+  learning_rate, beta1, beta2, epsilon, m, v, t = config['learning_rate'], \
+      config['beta1'], config['beta2'], config['epsilon'], config['m'], \
+      config['v'], config['t']+1
+  dx = np.reshape(dx,x.shape) #fix
+  m = beta1 * m + (1-beta1)*dx 
+  v = beta2 * v + (1-beta2)*(dx**2)
+  mb = m/(1-beta1**t) #correct bias
+  vb = v/(1-beta2**t) #correct bias
+  x += -learning_rate*mb/(np.sqrt(vb) + epsilon)
+  next_x = x 
+  config['m'],config['v'],config['t'] = m,v,t 
   #############################################################################
   #                             END OF YOUR CODE                              #
   #############################################################################

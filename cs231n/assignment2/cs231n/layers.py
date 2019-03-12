@@ -24,13 +24,17 @@ def affine_forward(x, w, b):
   # TODO: Implement the affine forward pass. Store the result in out. You     #
   # will need to reshape the input into rows.                                 #
   #############################################################################
-  pass
+  N = x.shape[0]
+  x_row = x.reshape(N,-1) #(N,D)
+  out = np.dot(x_row,w) + b #(N,M)
   #############################################################################
   #                             END OF YOUR CODE                              #
   #############################################################################
   cache = (x, w, b)
   return out, cache
 
+def ReLU(x):
+  return np.maximum(x,0)
 
 def affine_backward(dout, cache):
   """
@@ -45,14 +49,20 @@ def affine_backward(dout, cache):
   Returns a tuple of:
   - dx: Gradient with respect to x, of shape (N, d1, ..., d_k)
   - dw: Gradient with respect to w, of shape (D, M)
-  - db: Gradient with respect to b, of shape (M,)
+  - db: Gradient with respect to b, of shape (M,) #实际上不使用db = db.T,或者reshape 应该是(1,M)
   """
   x, w, b = cache
   dx, dw, db = None, None, None
   #############################################################################
   # TODO: Implement the affine backward pass.                                 #
   #############################################################################
-  pass
+  dx = np.dot(dout,w.T) #(N,D)
+  dx = np.reshape(dx,x.shape) #(N,d1,d2,...,d_k)
+  x_row = x.reshape(x.shape[0],-1) #(N,D)
+  dw = np.dot(x_row.T,dout) #(D,M)
+  db = np.sum(dout,axis=0,keepdims=True) #(1,M)
+  # print(db.shape)  # (1, 5)
+  # db = np.reshape(db.shape[1],-1) #(M,1)
   #############################################################################
   #                             END OF YOUR CODE                              #
   #############################################################################
@@ -74,7 +84,7 @@ def relu_forward(x):
   #############################################################################
   # TODO: Implement the ReLU forward pass.                                    #
   #############################################################################
-  pass
+  out = ReLU(x)
   #############################################################################
   #                             END OF YOUR CODE                              #
   #############################################################################
@@ -97,7 +107,8 @@ def relu_backward(dout, cache):
   #############################################################################
   # TODO: Implement the ReLU backward pass.                                   #
   #############################################################################
-  pass
+  dx = dout #斜率为1
+  dx[x <= 0] = 0
   #############################################################################
   #                             END OF YOUR CODE                              #
   #############################################################################
@@ -520,12 +531,12 @@ def svm_loss(x, y):
   N = x.shape[0]
   correct_class_scores = x[np.arange(N), y]
   margins = np.maximum(0, x - correct_class_scores[:, np.newaxis] + 1.0)
-  margins[np.arange(N), y] = 0
+  margins[np.arange(N), y] = 0  # correct_class的loss为0
   loss = np.sum(margins) / N
   num_pos = np.sum(margins > 0, axis=1)
   dx = np.zeros_like(x)
-  dx[margins > 0] = 1
-  dx[np.arange(N), y] -= num_pos
+  dx[margins > 0] = 1 #非正确类的梯度
+  dx[np.arange(N), y] -= num_pos #正确类的梯度
   dx /= N
   return loss, dx
 
