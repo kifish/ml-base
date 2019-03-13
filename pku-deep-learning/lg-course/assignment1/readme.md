@@ -17,3 +17,19 @@ https://www.cs.toronto.edu/~kriz/cifar.html
 包含6个子文件夹的一个zip文件，其中的子文件夹应包含：
 1、对应上述6种情况之一的一份源代码；
 2、对应上述源代码的学习曲线的一个png文件；
+
+
+
+
+
+图像数据集benchmark：
+http://rodrigob.github.io/are_we_there_yet/build/classification_datasets_results.html
+
+requirements:   
+keras 2.2.4    
+tensorflow 1.12.0    
+numpy 1.15.4   
+python 3.6.4
+
+
+
