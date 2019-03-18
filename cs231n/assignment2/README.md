@@ -121,6 +121,14 @@ class FullyConnectedNet(object):
   """
 ```
 
+Some good architectures to try include:
+[conv-relu-pool]xN - conv - relu - [affine]xM - [softmax or SVM]
+[conv-relu-pool]XN - [affine]XM - [softmax or SVM]
+[conv-relu-conv-relu-pool]xN - [affine]xM - [softmax or SVM]
+
+affine即全连接层。
+
+
 ### Q2: Batch Normalization (30 points)
 In the IPython notebook `BatchNormalization.ipynb` you will implement batch
 normalization, and use it to train deep fully-connected networks.
@@ -134,6 +142,11 @@ In the IPython Notebook `ConvolutionalNetworks.ipynb` you will implement several
 new layers that are commonly used in convolutional networks. You will train a
 (shallow) convolutional network on CIFAR-10, and it will then be up to you to
 train the best network that you can.
+
+https://github.com/zlotus/cs231n/blob/master/assignment2/ConvolutionalNetworks.ipynb
+
+实际训练过程中，loss有可能为负。但是从公式来看是不可能为负的。
+
 
 ### Q5: Do something extra! (up to +10 points)
 In the process of training your network, you should feel free to implement

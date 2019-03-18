@@ -26,11 +26,28 @@ https://www.jianshu.com/p/93d2230e5f27
   * [Batch Normalization](assignment2/BatchNormalization.ipynb)
   * [Dropout](assignment2/Dropout.ipynb)
   * [ConvNet on CIFAR-10](assignment2/ConvolutionalNetworks.ipynb)
+fc_net.py值得多看看。
+
+cnn layer与fc layer的区别:前者参数少，但计算量大;后者参数多，但计算量少。
+cnn网络结构:
+conv + relu + pooling
+
+INPUT --> [[CONV --> RELU]*N --> POOL?]*M --> [FC --> RELU]*K --> FC(OUTPUT)
+
+· INPUT --> FC/OUT      
+· INPUT --> CONV --> RELU --> FC/OUT
+· INPUT --> [CONV --> RELU --> POOL]*2 --> FC --> RELU --> FC/OUT
+· INPUT --> [CONV --> RELU --> CONV --> RELU --> POOL]*3 --> [FC --> RELU]*2 --> FC/OUT
+
 
 https://www.cnblogs.com/daihengchen/tag/CS231n/
+代码见:
+https://github.com/zlotus/cs231n  
+公式及拓展见:
 https://www.jianshu.com/p/9c4396653324
 
 
+To do:   
 ### 3. [Assignment 3](http://cs231n.github.io/assignments2016/assignment3/)
   * [Image Captioning with Vanilla RNNs](assignment3/RNN_Captioning.ipynb)
   * [Image Captioning with LSTMs](assignment3/LSTM_Captioning.ipynb)
@@ -38,5 +55,5 @@ https://www.jianshu.com/p/9c4396653324
   * [Image Generation: Classes, Inversion, DeepDream](assignment3/ImageGeneration.ipynb)
 
 http://cs231n.github.io/assignments2016/assignment3/
-
+https://www.jianshu.com/p/e46b1aa48886
 https://www.jianshu.com/p/182baeb82c71
