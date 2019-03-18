@@ -30,6 +30,8 @@ fc_net.py值得多看看。
 
 cnn layer与fc layer的区别:前者参数少，但计算量大;后者参数多，但计算量少。
 cnn网络结构:
+https://github.com/kifish/ml-base/blob/master/cs231n/assignment2/README.md#q1-fully-connected-neural-network-30-points
+
 conv + relu + pooling
 
 INPUT --> [[CONV --> RELU]*N --> POOL?]*M --> [FC --> RELU]*K --> FC(OUTPUT)
