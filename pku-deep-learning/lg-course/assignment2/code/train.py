@@ -34,7 +34,6 @@ if __name__ == "__main__":
 
     config = tf.ConfigProto()
     config.allow_soft_placement = True
-    config.gpu_options.allow_growth = True
 
     with tf.Session(config=config) as sess:
         sess.run(tf.global_variables_initializer())
