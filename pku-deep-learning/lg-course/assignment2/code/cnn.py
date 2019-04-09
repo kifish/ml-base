@@ -481,7 +481,9 @@ if __name__ == "__main__":
 
 #version6:
 #在version5基础上加__compatible_convolutional_noise_shape
-
+# [*] Epoch 12/20, No testing!
+# [*] Early Stopping!
+# [*] Accuracy on test set: 0.84230
 
 
 
