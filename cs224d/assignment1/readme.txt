@@ -1,0 +1,1 @@
+http://cs224d.stanford.edu/assignment1/index.html
