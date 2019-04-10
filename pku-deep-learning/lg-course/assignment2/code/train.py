@@ -15,9 +15,9 @@ if __name__ == "__main__":
     d = Fashion_MNIST()
 
     # Read hyper-parameters
-    keep_prob_fc = 0.5
-    keep_prob_conv = 0.5
-    bs = 32  # batch_size
+    keep_prob_fc = 0.95
+    keep_prob_conv = 0.8
+    bs = 128  # batch_size
     n_epoch = 20
     n_batch_train = int(d.train.size / bs)
     n_batch_valid = int(d.valid.size / bs)

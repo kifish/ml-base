@@ -40,26 +40,55 @@ class Attacker(object):
         new.append(0)
         self.old2new = dict(zip(old, new))
         self.alpha = 0.01  # 学习率
+        self.old_images_ph = tf.placeholder(np.float32, [None, 28, 28, 1])
+        self.adv_images_ph = tf.placeholder(np.float32, [None, 28, 28, 1])
+        self.l2_grad = 2 * (self.adv_images_ph - self.old_images_ph)
 
-    def gen_adv(self, x, label, sess,iterations=50):
+    def gen_adv(self, x, label, sess, iterations=10):
         old_image = x.copy()
         x = np.reshape(x, (-1, 28, 28, 1))
         #         print(x.shape)
+        #         print('label',label)
         label = np.argmax(label)
+        #         print(label)
         target = self.old2new[label]
         #         print(target)
         target = to_categorical(target, 10, dtype='float32')
         #         print(target)
-        target = np.expand_dims(target, 0)
         for _ in range(iterations):
-            grad_val = self.model.grad_op(sess, x, target)
-            x -= np.sign(grad_val)
+            grad_val = self.model.grad_op(sess, x, np.expand_dims(target, 0))
+            grad_val = np.array(grad_val)
+            #             print(grad_val.shape)
+            grad_val = grad_val[0][0]
+            #             print(grad_val.shape)
+            x -= self.alpha * np.sign(grad_val)
             x = np.clip(x, 0., 1.)
         x_adv = x
-        print('orginal label',np.argmax(label))
-        pred = self.model.infer_op(sess,x_adv)
-        pred = np.argmax(pred,1)[0]
-        print('now prediction is',pred)
+        print('orginal label', label)
+        pred = self.model.infer_op(sess, np.expand_dims(old_image, 0))
+        pred = pred[0]
+        prob = np.exp(pred) / np.sum(np.exp(pred))
+        prob_ori = prob[0]
+        #         print(prob)
+
+        pred = self.model.infer_op(sess, x_adv)
+        pred = np.array(pred)
+        #         print(pred.shape)
+        pred = pred[0]
+        #         print(pred.shape)
+        prob = np.exp(pred) / np.sum(np.exp(pred))
+        prob_new = prob[0]
+        pred = np.argmax(pred, 1)[0]
+        print('now prediction is', pred)
+
+        #         print(prob)
+        print('        before   after')
+        for i in range(len(prob_ori)):
+            print('class {}: {:.2f} \t {:.2f}'.format(i, float(prob_ori[i]), float(prob_new[i])))
+        if self.old2new[label] == pred:
+            print('attack succeed')
+        else:
+            print('attack fail')
 
         print('plot...')
         plt.figure(figsize=(9, 9))
@@ -74,6 +103,264 @@ class Attacker(object):
         plt.show()
 
         return x_adv
+
+    def gen_adv_l2_spe(self, x, label, sess, iterations=10):
+        old_image = x.copy()
+        x = np.reshape(x, (-1, 28, 28, 1))
+        label = np.argmax(label)
+        target = self.old2new[label]
+        target = to_categorical(target, 10, dtype='float32')
+        for _ in range(iterations):
+            grad_val = self.model.grad_op(sess, x, np.expand_dims(target, 0))
+            grad_val = np.array(grad_val)
+            #             print(grad_val.shape)
+            grad_val = grad_val[0][0]
+            l2_grad_val = sess.run(self.l2_grad,
+                                   feed_dict={self.old_images_ph: np.expand_dims(old_image, 0), self.adv_images_ph: x})
+            #             print(grad_val.shape)
+            grad_val += l2_grad_val
+            x -= self.alpha * np.sign(grad_val)
+            x = np.clip(x, 0., 1.)
+        x_adv = x
+        #         print('orginal label',label)
+        pred = self.model.infer_op(sess, np.expand_dims(old_image, 0))
+        pred = pred[0]
+        prob = np.exp(pred) / np.sum(np.exp(pred))
+        prob_ori = prob[0]
+        #         print(prob)
+        pred = self.model.infer_op(sess, x_adv)
+        pred = np.array(pred)
+        #         print(pred.shape)
+        pred = pred[0]
+        #         print(pred.shape)
+        prob = np.exp(pred) / np.sum(np.exp(pred))
+        prob_new = prob[0]
+        pred = np.argmax(pred, 1)[0]
+        flag = True
+        if self.old2new[label] == pred:
+            #             print('attack succeed')
+            pass
+        else:
+            #             print('attack fail')
+            flag = False
+        return flag
+
+    def gen_adv_l2(self, x, label, sess, iterations=10):
+        old_image = x.copy()
+        x = np.reshape(x, (-1, 28, 28, 1))
+        #         print(x.shape)
+        #         print('label',label)
+        label = np.argmax(label)
+        #         print(label)
+        target = self.old2new[label]
+        #         print(target)
+        target = to_categorical(target, 10, dtype='float32')
+        #         print(target)
+        for _ in range(iterations):
+            grad_val = self.model.grad_op(sess, x, np.expand_dims(target, 0))
+            grad_val = np.array(grad_val)
+            #             print(grad_val.shape)
+            grad_val = grad_val[0][0]
+            l2_grad_val = sess.run(self.l2_grad,
+                                   feed_dict={self.old_images_ph: np.expand_dims(old_image, 0), self.adv_images_ph: x})
+            #             print(grad_val.shape)
+            grad_val += l2_grad_val
+            x -= self.alpha * np.sign(grad_val)
+            x = np.clip(x, 0., 1.)
+        x_adv = x
+        print('orginal label', label)
+        pred = self.model.infer_op(sess, np.expand_dims(old_image, 0))
+        pred = pred[0]
+        prob = np.exp(pred) / np.sum(np.exp(pred))
+        prob_ori = prob[0]
+        #         print(prob)
+
+        pred = self.model.infer_op(sess, x_adv)
+        pred = np.array(pred)
+        #         print(pred.shape)
+        pred = pred[0]
+        #         print(pred.shape)
+        prob = np.exp(pred) / np.sum(np.exp(pred))
+        prob_new = prob[0]
+        pred = np.argmax(pred, 1)[0]
+        print('now prediction is', pred)
+
+        #         print(prob)
+        print('        before   after')
+        for i in range(len(prob_ori)):
+            print('class {}: {:.2f} \t {:.2f}'.format(i, float(prob_ori[i]), float(prob_new[i])))
+        if self.old2new[label] == pred:
+            print('attack succeed')
+        else:
+            print('attack fail')
+        print('plot...')
+        plt.figure(figsize=(9, 9))
+        plt.subplot(2, 1, 1)
+        plt.imshow(x_adv[0].reshape((28, 28)))
+        plt.title('new image')
+
+        plt.subplot(2, 1, 2)
+        plt.title('original image')
+        plt.imshow(old_image.reshape((28, 28)))
+        #     plt.gcf().set_size_inches(15, 12)
+        plt.show()
+
+        return x_adv
+
+    def get_targets(self, labels):
+        targets = []
+        for label in labels:
+            label = np.argmax(label)
+            target = self.old2new[label]
+            targets.append(target)
+        targets = to_categorical(targets, 10, dtype='float32')
+        return targets
+
+    def gen_advs(self, X, Y, sess, iterations=50):
+        X = np.array(X)
+        X = np.reshape(X, (-1, 28, 28, 1))
+        targets = self.get_targets(Y)
+        for _ in range(iterations):
+            grad_val = self.model.grad_op(sess, X, targets)
+            grad_val = np.array(grad_val)
+            #             print(grad_val.shape)
+            grad_val = grad_val[0][0]
+            #             print(grad_val.shape)
+            X -= self.alpha * np.sign(grad_val)
+            X = np.clip(X, 0., 1.)
+        X_adv = X
+        pred = self.model.infer_op(sess, X_adv)
+        pred = pred[0]
+        test_size = pred.shape[0]
+        #         print(pred)
+        cnt = 0
+        for i in range(test_size):
+            if np.argmax(pred[i]) == np.argmax(targets[i]):
+                cnt += 1
+        acc = cnt / test_size
+        print('attack success rate:', acc)
+
+    def gen_advs_and_plot(self, X, Y, sess, iterations=50):
+        ori_images = X.copy()
+        X = np.array(X)
+        X = np.reshape(X, (-1, 28, 28, 1))
+        targets = self.get_targets(Y)
+        acc_history = []
+        for _ in range(iterations):
+            grad_val = self.model.grad_op(sess, X, targets)
+            grad_val = np.array(grad_val)
+            #             print(grad_val.shape)
+            grad_val = grad_val[0][0]
+            #             print(grad_val.shape)
+            X -= self.alpha * np.sign(grad_val)
+            X = np.clip(X, 0., 1.)
+            pred = self.model.infer_op(sess, X)
+            pred = pred[0]
+            test_size = pred.shape[0]
+            cnt = 0
+            for i in range(test_size):
+                if np.argmax(pred[i]) == np.argmax(targets[i]):
+                    cnt += 1
+            acc = cnt / test_size
+            acc_history.append(acc)
+        plt.plot(acc_history, 'b')
+        plt.plot(acc_history, 'bo')
+        plt.xlabel('Iteration')
+        plt.ylabel('Attack success rate')
+        plt.gcf().set_size_inches(15, 12)
+        plt.show()
+        print('final attack success rate:', acc_history[-1])
+        samples = []
+        for i in range(test_size):
+            if np.argmax(pred[i]) == np.argmax(targets[i]):
+                samples.append((ori_images[i], X[i], np.argmax(targets[i])))
+        idxs = np.random.choice(len(samples), 10, replace=False)
+        selected_samples = []
+        for idx in idxs:
+            selected_samples.append(samples[idx])
+        return selected_samples
+
+    def gen_advs_l2_spe(self, X, Y, sess, iterations=50):
+        cnt = 0
+        for i in range(X.shape[0]):
+            flag = self.gen_adv_l2_spe(X[i], Y[i], sess, iterations)
+            if flag:
+                cnt += 1
+        print('attack success rate:', cnt / X.shape[0])
+
+    def gen_advs_l2_and_plot(self, X, Y, sess, iterations=50):
+        ori_images = X.copy()
+        X = np.array(X)
+        X = np.reshape(X, (-1, 28, 28, 1))
+        targets = self.get_targets(Y)
+        acc_history = []
+        for _ in range(iterations):
+            grad_val = self.model.grad_op(sess, X, targets)
+            grad_val = np.array(grad_val)
+            #             print(grad_val.shape)
+            grad_val = grad_val[0][0]
+            #             print(grad_val.shape)
+            l2_grad_val = sess.run(self.l2_grad, feed_dict={self.old_images_ph: ori_images, self.adv_images_ph: X})
+            #             print(l2_grad_val.shape)
+            grad_val += 0.1 * l2_grad_val  # 不加0.1波动太大。
+            X -= self.alpha * np.sign(grad_val)
+            X = np.clip(X, 0., 1.)
+            pred = self.model.infer_op(sess, X)
+            pred = pred[0]
+            test_size = pred.shape[0]
+            cnt = 0
+            for i in range(test_size):
+                if np.argmax(pred[i]) == np.argmax(targets[i]):
+                    cnt += 1
+            acc = cnt / test_size
+            acc_history.append(acc)
+        plt.plot(acc_history, 'b')
+        plt.plot(acc_history, 'bo')
+        plt.xlabel('Iteration')
+        plt.ylabel('Attack success rate')
+        plt.gcf().set_size_inches(15, 12)
+        plt.show()
+        print('final attack success rate:', acc_history[-1])
+        samples = []
+        for i in range(test_size):
+            if np.argmax(pred[i]) == np.argmax(targets[i]):
+                samples.append((ori_images[i], X[i], np.argmax(targets[i])))
+        idxs = np.random.choice(len(samples), 10, replace=False)
+        selected_samples = []
+        for idx in idxs:
+            selected_samples.append(samples[idx])
+        return selected_samples
+
+    def plot_samples(self, samples):
+        row_n = len(samples)
+        fig = plt.figure(figsize=(16, 16))
+        gs = gridspec.GridSpec(7, 10)
+        gs.update(wspace=0.035, hspace=0.1)  # set the spacing between axes.
+        col_n = 2
+        for idx, sample in enumerate(samples):
+            plt_idx = col_n * idx
+            ax = plt.subplot(gs[plt_idx])
+            ax.axis('off')
+            plt.imshow(sample[0].reshape(28, 28))
+            plt_idx = col_n * idx + 1
+            ax = plt.subplot(gs[plt_idx])
+            plt.imshow(sample[1].reshape(28, 28))
+            ax.axis('off')
+            plt.title('class:' + str(int(sample[2])))
+        #             print('class :',sample[2])
+        plt.show()
+    def save_samples(self, samples):
+        if not os.path.exists('./white_attack_results'):
+            os.mkdir('./white_attack_results')
+        root_path = './white_attack_results'
+        for idx,sample in enumerate(samples):
+            ori_image = sample[0]
+            adv_image = sample[1]
+            label = sample[2]
+            file_path = os.path.join(root_path,'group {},class {},original_img.png'.format(idx,label))
+            plt.imsave(file_path,ori_image.reshape(28,28))
+            file_path = os.path.join(root_path, 'group {},class {},adversarial_img.png'.format(idx, label))
+            plt.imsave(file_path, adv_image.reshape(28, 28))
 
 if __name__ == "__main__":
 
@@ -142,8 +429,10 @@ if __name__ == "__main__":
         plot_attack_image(x_attack, y_attack)
 
         attacker = Attacker(m)
-        new_image = attacker.gen_adv(x_attack[0],y_attack[0],sess)
+        samples = attacker.gen_advs_and_plot(x_attack,y_attack,sess,iterations=50)
+        attacker.save_samples(samples)
 
 
-# 注意，助教给的测试接口有问题，可能会重复采样。
+
+
 
