@@ -45,6 +45,12 @@ python black_box_attack_other.py
 
 
 
+#### how to run
+```py
+python adv_train.py
+python white_box_attack_adv_trained.py
+python black_box_attack_adv_trained.py
+```
 
 
 旧分类器在test集上的准确率为0.9138
@@ -55,8 +61,6 @@ python black_box_attack_other.py
 白盒攻击在新分类器上的成功率为100%
 
 由于白盒攻击基于梯度且数据集较为简单，攻击成功率基本没变化。
-
-
 
 
 黑盒攻击在旧分类器上的成功率为

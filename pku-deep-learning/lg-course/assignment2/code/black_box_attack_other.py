@@ -285,7 +285,7 @@ if __name__ == "__main__":
         print(Y_attack.shape)
 
         X_attack = X_attack.transpose(0,2,3,1)
-        Y_attack = Y_attack.transpose(0,2,1)
+        Y_attack = Y_attack.reshape([-1,10])
         print(X_attack.shape)
         print(Y_attack.shape)
         # plot_attack_image(X_attack,Y_attack)
