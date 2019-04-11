@@ -1,2 +1,2 @@
-model_checkpoint_path: "naive_model.ckpt"
-all_model_checkpoint_paths: "naive_model.ckpt"
+model_checkpoint_path: "adv_trained_model.ckpt"
+all_model_checkpoint_paths: "adv_trained_model.ckpt"

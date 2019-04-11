@@ -32,7 +32,7 @@ class dataset(object):
         
         self.__shuffle()
             
-    def next_batch(self, batch_size, dtype=numpy.float32):
+    def next_batch(self, batch_size, dtype=numpy.float32,one_hot = False):
             
         if len(self.__idx) < batch_size:
             self.__shuffle()
@@ -44,8 +44,11 @@ class dataset(object):
         x, y = ([], [])
         for i in idx:
             x.append(self.__x[i])
-            y.append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
-            y[-1][self.__y[i]] = 1
+            if one_hot:
+                y.append(self.__y[i])
+            else:
+                y.append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+                y[-1][self.__y[i]] = 1
         return numpy.asarray(x, dtype=dtype), numpy.asarray(y, dtype=dtype)
 
 class Fashion_MNIST(object):
