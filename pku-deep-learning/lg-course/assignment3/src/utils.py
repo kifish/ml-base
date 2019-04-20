@@ -2,6 +2,8 @@
 # Ref:https://github.com/prijip/Py-Gsvhn-DigitStruct-Reader
 import h5py
 import numpy as np
+import os
+import matplotlib.pyplot as plt
 
 # Bounding Box
 class BBox:
@@ -119,11 +121,44 @@ def load_mat(path,verbose = False):
             sample.append((bbox.label, bbox.left, bbox.top, bbox.width, bbox.height))
         data.append(sample)
         sample_cnt += 1
-        # if sample_cnt >= 5:
+        # if sample_cnt >= 5:  #for debug
         #     break
     print('loaded {} samples'.format(len(data)))
+    return data
+
+def load_data(root_path,verbose = False):
+    X = []
+    Y = []
+    X_boxes = []
+    samples = load_mat(os.path.join(root_path,'digitStruct.mat'),verbose)
+    for sample in samples:
+        file_name = sample[0]
+        file_path = os.path.join(root_path,file_name)
+        img = plt.imread(file_path)
+        infos = sample[1:]
+        digits = []
+        boxes = []
+        for info in infos:
+            digits.append(info[0])
+            boxes.append(info[1:])
+        X.append(img)
+        X_boxes.append(boxes)
+        Y.append(digits)
+    X = np.array(X)
+    X_boxes = np.array(X_boxes)
+    Y = np.array(Y)
+
+    print('X:', X.shape)
+    print('X_boxes:', X_boxes.shape)
+    print('Y:',Y.shape)
+    return X,X_boxes,Y
+
+
+
 
 if __name__ == "__main__":
-    train_data_path = '../train/digitStruct.mat'
-    load_mat(train_data_path,verbose=True)
+    # train_data_path = '../data/train/digitStruct.mat'
+    # load_mat(train_data_path,verbose=True)
+    root_path = '../data/train/'
+    load_data(root_path,True)
 
