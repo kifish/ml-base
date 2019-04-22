@@ -184,7 +184,7 @@ def rgb2gray(img):
     return np.dot(np.array(img, dtype='float32'), [0.299, 0.587, 0.114])
 
 def normalize(imgs):
-    imgs = rgb2gray(imgs) # broadcast
+    # imgs = rgb2gray(imgs) # broadcast  #不使用转灰度图片，以方便后续配合resnet50
     mean_img = np.mean(imgs,axis=0)
     imgs -= mean_img
     return imgs
@@ -256,7 +256,9 @@ if __name__ == "__main__":
     X_train, Y_train = process_data(root_path)
     print('X_train:',X_train.shape)
     print('Y_train:',Y_train.shape)
-    with open('../data/train.pkl', "wb") as f:
+    # with open('../data/train.pkl', "wb") as f:
+    #     pickle.dump([X_train, Y_train], f)
+    with open('../data/train_rgb.pkl', "wb") as f:
         pickle.dump([X_train, Y_train], f)
     del X_train,Y_train
 
@@ -272,5 +274,7 @@ if __name__ == "__main__":
     X_test, Y_test = process_data(root_path)
     print('X_test:',X_test.shape)
     print('Y_test:',Y_test.shape)
-    with open('../data/test.pkl', "wb") as f:
+    # with open('../data/test.pkl', "wb") as f:
+    #     pickle.dump([X_test, Y_test], f)
+    with open('../data/test_rgb.pkl', "wb") as f:
         pickle.dump([X_test, Y_test], f)

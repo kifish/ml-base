@@ -211,9 +211,10 @@ def load_data():
     with open('../data/test.pkl', 'rb') as f:
         X_test, Y_test = pickle.load(f)
 
-    X_train = np.reshape(X_train,[-1,64,64,1])
-    X_test = np.reshape(X_test,[-1,64,64,1])
-    # (?, 64, 64) -> (?, 64, 64, 1)
+    #needless if use rgb imgs
+    # X_train = np.reshape(X_train,[-1,64,64,1])
+    # X_test = np.reshape(X_test,[-1,64,64,1])
+    # # (?, 64, 64) -> (?, 64, 64, 1)
     return X_train, Y_train, X_test, Y_test
 
 
