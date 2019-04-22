@@ -278,7 +278,12 @@ def main():
     # Start counting execution time
     start_time = time.time()
 
-    with tf.Session() as sess:
+
+    config = tf.ConfigProto(log_device_placement=True)
+    config.allow_soft_placement = True
+    config.gpu_options.allow_growth = True
+
+    with tf.Session(config = config) as sess:
         # Initialize Tensorflow variables
         sess.run(tf.global_variables_initializer())
 
