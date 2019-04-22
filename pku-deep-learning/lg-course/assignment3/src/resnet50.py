@@ -1,4 +1,4 @@
-from keras.layers import Flatten, Dense, Dropout
+from keras.layers import Flatten, Dense, Dropout,Input
 from keras.applications import resnet50
 from keras.models import Model
 from keras.layers.normalization import BatchNormalization
@@ -6,7 +6,7 @@ from keras import backend as K
 import tensorflow as tf
 import numpy as np
 import pickle
-base_model = resnet50.ResNet50(include_top=False, weights='imagenet', input_tensor=None, input_shape=(64,64,3), pooling=None, classes=1000)
+base_model = resnet50.ResNet50(include_top=False, weights='imagenet', input_tensor=Input(shape=(64,64,3)), pooling=None, classes=1000)
 def cal_seq_acc(out,labels):
     labels = np.asarray(labels).squeeze()
     num_feature,num_sample = labels.shape
