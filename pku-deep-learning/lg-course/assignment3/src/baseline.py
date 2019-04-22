@@ -224,7 +224,7 @@ def main():
     test_examples = X_test.shape[0]
 
     # Clear existing logs
-    clear_old_logs()
+    # clear_old_logs()
 
     # Build the graph for the deep net
     digit1, digit2, digit3, digit4, digit5, keep_prob = cnn(X)
@@ -284,8 +284,8 @@ def main():
 
         # Writers for storing tensorboard statistics
         merged = tf.summary.merge_all()
-        train_writer = tf.summary.FileWriter(train_log_dir, sess.graph)
-        test_writer = tf.summary.FileWriter(test_log_dir)
+        # train_writer = tf.summary.FileWriter(train_log_dir, sess.graph)
+        # test_writer = tf.summary.FileWriter(test_log_dir)
 
         # Variables useful for batch creation
         start = 0
@@ -322,7 +322,7 @@ def main():
 
                 train_accuracies.append(_accuracy_multi)
                 train_losses.append(_cost)
-                train_writer.add_summary(_summary, i)
+                # train_writer.add_summary(_summary, i)
 
         # Test the model by measuring it's accuracy
         test_iterations = test_examples // batch_size + 1
@@ -335,7 +335,7 @@ def main():
             test_accuracies_single.append(_accuracy_single)
             test_accuracies_multi.append(_accuracy_multi)
             test_losses.append(_cost)
-            test_writer.add_summary(_summary, i)
+            # test_writer.add_summary(_summary, i)
         print("Mean Test Accuracy Single: {0:5f}, "
               "Mean Test Accuracy Multi: {1:5f}, "
               "Mean Test Loss: {2:5f}".format(np.mean(test_accuracies_single),
