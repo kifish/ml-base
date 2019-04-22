@@ -12,11 +12,6 @@ display_step = 1000
 # Use of extra dataset
 use_extra = False
 
-# Use only one of the below flags as true
-plain = False
-normalized = False
-gray = True
-
 # Data Directory where the processed data reside
 data_dir = "../../res/processed/"
 
@@ -279,7 +274,7 @@ def main():
     start_time = time.time()
 
 
-    config = tf.ConfigProto(log_device_placement=True)
+    config = tf.ConfigProto(log_device_placement=False) #True的话打印的信息太多了。
     config.allow_soft_placement = True
     config.gpu_options.allow_growth = True
 
