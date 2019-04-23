@@ -48,13 +48,22 @@ with open('../data/train_rgb.pkl', 'rb') as f:
 with open('../data/test_rgb.pkl', 'rb') as f:
     X_test, Y_test = pickle.load(f)
 
+# https://keras.io/getting-started/functional-api-guide/#multi-input-and-multi-output-models
+Y_train = [
+    Y_train[:,0,:],
+    Y_train[:,1,:],
+    Y_train[:,2,:],
+    Y_train[:,3,:],
+    Y_train[:,4,:]
+]
 
-
-# X_train, X_val, Y_train, Y_val = train_test_split(X_train, Y_train, test_size = 0.20, random_state=1)
-Y_train = list(Y_train)
-# X_val = list(X_val) #keras自带的即可
-Y_test = list(Y_test)
-# 把Y_train转成np array的话,fit会报错
+Y_test = [
+    Y_test[:,0,:],
+    Y_test[:,1,:],
+    Y_test[:,2,:],
+    Y_test[:,3,:],
+    Y_test[:,4,:]
+]
 
 history = model.fit(x = X_train,y = Y_train,
                                  batch_size = 64,
