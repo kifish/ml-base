@@ -7,8 +7,10 @@ import tensorflow as tf
 import numpy as np
 import pickle
 base_model = resnet50.ResNet50(include_top=False, weights='imagenet', input_tensor=Input(shape=(64,64,3)), pooling=True, classes=1000)
+for layer in base_model.layers:
+    layer.trainable=False
 def cal_seq_acc(out,labels):
-    labels = np.asarray(labels).squeeze()
+    labels = np.array(labels).squeeze()
     num_feature,num_sample = labels.shape
     preds = []
     Y_out = []
@@ -70,12 +72,12 @@ Y_test = [
     Y_test[:, 4, :].reshape(n_test,11)
 ]
 
-#
+# 把Y_train转成np array的话,fit会报错
 # print(Y_train.shape)
 # print(Y_test.shape)
 history = model.fit(x = X_train,y = Y_train,
-                                 batch_size = 128,
-                                 epochs= 10,
+                                 batch_size = 64,
+                                 epochs= 5,
                                  verbose=1,
                                  shuffle = True,
                                  )
