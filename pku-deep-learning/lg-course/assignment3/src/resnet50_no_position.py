@@ -2,33 +2,10 @@ from keras.layers import Flatten, Dense, Dropout,Input
 from keras.applications import resnet50
 from keras.models import Model
 from keras.layers.normalization import BatchNormalization
-from keras import backend as K
-import tensorflow as tf
 import numpy as np
 import pickle
+import matplotlib.pyplot as plt
 base_model = resnet50.ResNet50(include_top=False, weights='imagenet', input_tensor=Input(shape=(64,64,3)), pooling=True, classes=1000)
-#for layer in base_model.layers:
-#    layer.trainable=False
-
-def single_acc(Y,prediction):
-    #问题在于prediction的shape似乎是(None,11),不是完整的prediction
-    # Compute equality vectors
-    correct_prediction = tf.equal(tf.argmax(prediction, 2), tf.argmax(Y, 2))
-    # Calculate mean accuracy among 1st dimension
-    accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32), 1)
-    # Accuracy of predicting any digit in the images
-    accuracy_single = tf.reduce_mean(accuracy)
-    return accuracy_single
-
-def multi_acc(Y,prediction):
-    # Compute equality vectors
-    correct_prediction = tf.equal(tf.argmax(prediction, 2), tf.argmax(Y, 2))
-    # Calculate mean accuracy among 1st dimension
-    accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32), 1)
-    # Accuracy of the predicting all numbers in an image
-    accuracy_multi = tf.reduce_mean(tf.cast(tf.equal(accuracy, tf.constant(1.0)), tf.float32))
-    return accuracy_multi
-
 
 def cal_acc(probs,Y):
     probs = np.array(probs)
@@ -70,10 +47,9 @@ model.summary()
 with open('../data/train_rgb.pkl', 'rb') as f:
     X_train, Y_train = pickle.load(f)
 
-with open('../data/test_rgb.pkl', 'rb') as f:
+with open('../data/test_no_pos.pkl', 'rb') as f:
     X_test, Y_test = pickle.load(f)
 
-# https://keras.io/getting-started/functional-api-guide/#multi-input-and-multi-output-models
 Y_train = [
     Y_train[:,0,:],
     Y_train[:,1,:],
@@ -92,7 +68,7 @@ Y_test = [
 
 history = model.fit(x = X_train,y = Y_train,
                                  batch_size = 256,
-                                 epochs= 5,
+                                 epochs= 50,
                                  verbose=1,
                                  validation_split=0.05,
                                  shuffle = True
@@ -113,5 +89,29 @@ print('Test single accuracy:', single_acc)
 print('Test sequence accuracy:', seq_acc)
 
 
+acc = history.history['acc']
+val_acc = history.history['val_acc']
+loss = history.history['loss']
+val_loss = history.history['val_loss']
+epochs = range(1, len(acc) + 1)
+# "bo" is for "blue dot"
+plt.figure(0)
+plt.plot(epochs, loss, 'bo', label='Training loss')
+# b is for "solid blue line"
+plt.plot(epochs, val_loss, 'b', label='Validation loss')
+plt.title('Training and validation loss')
+plt.xlabel('Epochs')
+plt.ylabel('Loss')
+plt.legend()
+#plt.show()
+plt.savefig('Training and validation loss.png')
 
-
+plt.figure(1)
+plt.plot(epochs, acc, 'bo', label='Training acc')
+plt.plot(epochs, val_acc, 'b', label='Validation acc')
+plt.title('Training and validation accuracy')
+plt.xlabel('Epochs')
+plt.ylabel('Accuracy')
+plt.legend()
+# plt.show()
+plt.savefig('Training and validation accuracy.png')

@@ -216,6 +216,23 @@ def process_digits(Y):
         Y_one_hot.append(y_one_hot)
     Y_one_hot = np.array(Y_one_hot)
     return Y_one_hot
+def process_test_data(root_path):
+    X, _, Y = load_data(root_path, True) # verbose output
+    n_imgs = len(X)
+    print('the number of images:',n_imgs)
+    print('Y:',Y.shape)
+    print('processing...')
+    for i in range(n_imgs):
+        img = X[i]
+        img = img.resize((64,64))
+        img = np.array(img)
+        X[i] = img
+    X = normalize(X)
+    Y = process_digits(Y)
+    print('X:',X.shape)
+    print('Y:',Y.shape)
+    return X,Y
+
 def process_data(root_path):
     X, X_boxes, Y = load_data(root_path, True) # verbose output
     X_box = process_box(X_boxes)
@@ -244,13 +261,9 @@ def process_data(root_path):
     print('Y:',Y.shape)
     return X,Y
 
-if __name__ == "__main__":
-    # train_data_path = '../data/train/digitStruct.mat'
-    # load_mat(train_data_path,verbose=True)
 
-    # root_path = '../data/train/'
-    # load_data(root_path,True)
-
+def get_rgb_data():
+    # use position information
     import pickle
     root_path = '../data/train/'
     X_train, Y_train = process_data(root_path)
@@ -262,14 +275,6 @@ if __name__ == "__main__":
         pickle.dump([X_train, Y_train], f)
     del X_train,Y_train
 
-    # with open('../data/train.pkl', 'rb') as f:
-    #     X_train, Y_train = pickle.load(f)
-    # plt.subplot(2,1,1)
-    # plt.imshow(X_train[0])
-    # plt.subplot(2,1,2)
-    # plt.imshow(X_train[1])
-    # plt.show()
-
     root_path = '../data/test/'
     X_test, Y_test = process_data(root_path)
     print('X_test:',X_test.shape)
@@ -278,3 +283,39 @@ if __name__ == "__main__":
     #     pickle.dump([X_test, Y_test], f)
     with open('../data/test_rgb.pkl', "wb") as f:
         pickle.dump([X_test, Y_test], f)
+
+def test_load_mat():
+    train_data_path = '../data/train/digitStruct.mat'
+    load_mat(train_data_path,verbose=True)
+
+
+def test_load_data():
+    root_path = '../data/train/'
+    load_data(root_path,True)
+
+
+def show_imgs():
+    import pickle
+    with open('../data/train.pkl', 'rb') as f:
+        X_train, Y_train = pickle.load(f)
+    plt.subplot(2,1,1)
+    plt.imshow(X_train[0])
+    plt.subplot(2,1,2)
+    plt.imshow(X_train[1])
+    plt.show()
+
+def get_rgb_data_no_pos_info():
+    # no position information
+    import pickle
+    root_path = '../data/test/'
+    X_test, Y_test = process_test_data(root_path)
+    print('X_test:',X_test.shape)
+    print('Y_test:',Y_test.shape)
+    with open('../data/test_no_pos.pkl', "wb") as f:
+        pickle.dump([X_test, Y_test], f)
+
+if __name__ == "__main__":
+    get_rgb_data_no_pos_info()
+
+
+
