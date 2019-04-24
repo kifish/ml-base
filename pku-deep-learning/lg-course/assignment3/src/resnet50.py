@@ -11,6 +11,7 @@ base_model = resnet50.ResNet50(include_top=False, weights='imagenet', input_tens
 #    layer.trainable=False
 
 def single_acc(Y,prediction):
+    #问题在于prediction的shape似乎是(None,11),不是完整的prediction
     # Compute equality vectors
     correct_prediction = tf.equal(tf.argmax(prediction, 2), tf.argmax(Y, 2))
     # Calculate mean accuracy among 1st dimension
@@ -33,6 +34,13 @@ def cal_acc(probs,Y):
     #似乎还有bug
     probs = np.array(probs)
     Y = np.array(Y)
+    print('receive probs:',probs.shape)
+    print('receive Y:', Y.shape)
+    probs.transpose((1,0,2))
+    Y.transpose((1, 0, 2))
+    print('transpose...')
+    print('probs:',probs.shape)
+    print('Y:', Y.shape)
     single_true_cnt = 0
     multi_true_cnt = 0
     n_samples = Y.shape[0]
@@ -57,7 +65,7 @@ pred5 = Dense(11,activation='softmax')(x)
 
 outputs = [pred1,pred2,pred3,pred4,pred5]
 model = Model(input=base_model.input,output = outputs)
-model.compile(optimizer='Adam', loss='categorical_crossentropy', metrics=['accuracy',single_acc,multi_acc])
+model.compile(optimizer='Adam', loss='categorical_crossentropy', metrics=['accuracy'])
 model.summary()
 
 with open('../data/train_rgb.pkl', 'rb') as f:
@@ -84,7 +92,7 @@ Y_test = [
 ]
 
 history = model.fit(x = X_train,y = Y_train,
-                                 batch_size = 64,
+                                 batch_size = 256,
                                  epochs= 5,
                                  verbose=1,
                                  validation_split=0.05,
