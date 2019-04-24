@@ -6,13 +6,31 @@ from keras import backend as K
 import tensorflow as tf
 import numpy as np
 import pickle
-from sklearn.model_selection import train_test_split
-
 base_model = resnet50.ResNet50(include_top=False, weights='imagenet', input_tensor=Input(shape=(64,64,3)), pooling=True, classes=1000)
-for layer in base_model.layers:
-    layer.trainable=False
+#for layer in base_model.layers:
+#    layer.trainable=False
+
+def single_acc(Y,prediction):
+    # Compute equality vectors
+    correct_prediction = tf.equal(tf.argmax(prediction, 2), tf.argmax(Y, 2))
+    # Calculate mean accuracy among 1st dimension
+    accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32), 1)
+    # Accuracy of predicting any digit in the images
+    accuracy_single = tf.reduce_mean(accuracy)
+    return accuracy_single
+
+def multi_acc(Y,prediction):
+    # Compute equality vectors
+    correct_prediction = tf.equal(tf.argmax(prediction, 2), tf.argmax(Y, 2))
+    # Calculate mean accuracy among 1st dimension
+    accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32), 1)
+    # Accuracy of the predicting all numbers in an image
+    accuracy_multi = tf.reduce_mean(tf.cast(tf.equal(accuracy, tf.constant(1.0)), tf.float32))
+    return accuracy_multi
+
 
 def cal_acc(probs,Y):
+    #似乎还有bug
     probs = np.array(probs)
     Y = np.array(Y)
     single_true_cnt = 0
@@ -39,7 +57,7 @@ pred5 = Dense(11,activation='softmax')(x)
 
 outputs = [pred1,pred2,pred3,pred4,pred5]
 model = Model(input=base_model.input,output = outputs)
-model.compile(optimizer='Adam', loss='categorical_crossentropy', metrics=['accuracy'])
+model.compile(optimizer='Adam', loss='categorical_crossentropy', metrics=['accuracy',single_acc,multi_acc])
 model.summary()
 
 with open('../data/train_rgb.pkl', 'rb') as f:
