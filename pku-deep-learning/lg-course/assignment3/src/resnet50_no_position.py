@@ -89,11 +89,11 @@ print('Test single accuracy:', single_acc)
 print('Test sequence accuracy:', seq_acc)
 
 
-acc = history.history['acc']
-val_acc = history.history['val_acc']
+#acc = history.history['acc']
+#val_acc = history.history['val_acc']
 loss = history.history['loss']
 val_loss = history.history['val_loss']
-epochs = range(1, len(acc) + 1)
+epochs = range(1, len(loss) + 1)
 # "bo" is for "blue dot"
 plt.figure(0)
 plt.plot(epochs, loss, 'bo', label='Training loss')
@@ -106,12 +106,12 @@ plt.legend()
 #plt.show()
 plt.savefig('Training and validation loss.png')
 
-plt.figure(1)
-plt.plot(epochs, acc, 'bo', label='Training acc')
-plt.plot(epochs, val_acc, 'b', label='Validation acc')
-plt.title('Training and validation accuracy')
-plt.xlabel('Epochs')
-plt.ylabel('Accuracy')
-plt.legend()
+# plt.figure(1)
+# plt.plot(epochs, acc, 'bo', label='Training acc')
+# plt.plot(epochs, val_acc, 'b', label='Validation acc')
+# plt.title('Training and validation accuracy')
+# plt.xlabel('Epochs')
+# plt.ylabel('Accuracy')
+# plt.legend()
 # plt.show()
-plt.savefig('Training and validation accuracy.png')
+# plt.savefig('Training and validation accuracy.png')
