@@ -1,7 +1,8 @@
-from keras.layers import Flatten, Dense, Dropout,Input
+from keras.layers import Flatten, Dense, Dropout,Input,Activation,MaxPooling2D
 from keras.applications import resnet50
 from keras.models import Model
 from keras.layers.normalization import BatchNormalization
+from keras import optimizers
 import numpy as np
 import pickle
 import matplotlib.pyplot as plt
@@ -29,10 +30,12 @@ def cal_acc(probs,Y):
     seq_acc = multi_true_cnt / Y.shape[0]
     return single_digit_acc,seq_acc
 
-x = Flatten()(base_model.output)
-x = Dense(128,activation='relu')(x)
-x = Dropout(0.2)(x)
+x = MaxPooling2D(pool_size=(2,2))(base_model.output)
+x = Flatten()(x)
+x = Dense(128,activation=None)(x)
 x = BatchNormalization()(x)
+x = Activation('relu')(x)
+x = Dropout(0.2)(x)
 pred1 = Dense(11,activation='softmax')(x)
 pred2 = Dense(11,activation='softmax')(x)
 pred3 = Dense(11,activation='softmax')(x)
@@ -41,13 +44,13 @@ pred5 = Dense(11,activation='softmax')(x)
 
 outputs = [pred1,pred2,pred3,pred4,pred5]
 model = Model(input=base_model.input,output = outputs)
-model.compile(optimizer='SGD', loss='categorical_crossentropy', metrics=['accuracy'])
+model.compile(optimizer='Adam', loss='categorical_crossentropy', metrics=['accuracy'])
 model.summary()
 
-with open('../data/train_rgb.pkl', 'rb') as f:
+with open('../data/train_no_pos_128.pkl', 'rb') as f:
     X_train, Y_train = pickle.load(f)
 
-with open('../data/test_no_pos.pkl', 'rb') as f:
+with open('../data/test_no_pos_128.pkl', 'rb') as f:
     X_test, Y_test = pickle.load(f)
 
 Y_train = [
@@ -68,7 +71,7 @@ Y_test = [
 
 history = model.fit(x = X_train,y = Y_train,
                                  batch_size = 256,
-                                 epochs= 20,
+                                 epochs= 50,
                                  verbose=1,
                                  validation_split=0.05,
                                  shuffle = True

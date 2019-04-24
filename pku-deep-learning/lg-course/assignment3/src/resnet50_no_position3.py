@@ -1,4 +1,4 @@
-from keras.layers import Flatten, Dense, Dropout,Input
+from keras.layers import Flatten, Dense, Dropout,Input,Activation
 from keras.applications import resnet50
 from keras.models import Model
 from keras.layers.normalization import BatchNormalization
@@ -30,9 +30,10 @@ def cal_acc(probs,Y):
     return single_digit_acc,seq_acc
 
 x = Flatten()(base_model.output)
-x = Dense(128,activation='relu')(x)
-x = Dropout(0.2)(x)
+x = Dense(128)(x)
 x = BatchNormalization()(x)
+x = Activation('relu')(x)
+x = Dropout(0.5)(x)
 pred1 = Dense(11,activation='softmax')(x)
 pred2 = Dense(11,activation='softmax')(x)
 pred3 = Dense(11,activation='softmax')(x)
