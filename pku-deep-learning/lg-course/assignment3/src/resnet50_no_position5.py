@@ -7,7 +7,7 @@ import numpy as np
 import pickle
 import matplotlib.pyplot as plt
 base_model = resnet50.ResNet50(include_top=False, weights='imagenet', input_tensor=Input(shape=(64,64,3)), pooling=True, classes=1000)
-
+from utils import get_data
 def cal_acc(probs,Y):
     probs = np.array(probs)
     Y = np.array(Y)
@@ -47,11 +47,7 @@ model = Model(input=base_model.input,output = outputs)
 model.compile(optimizer='Adam', loss='categorical_crossentropy', metrics=['accuracy'])
 model.summary()
 
-with open('../data/train_no_pos_128.pkl', 'rb') as f:
-    X_train, Y_train = pickle.load(f)
-
-with open('../data/test_no_pos_128.pkl', 'rb') as f:
-    X_test, Y_test = pickle.load(f)
+X_train,Y_train,X_test,Y_test = get_data()
 
 Y_train = [
     Y_train[:,0,:],
@@ -88,6 +84,8 @@ probs = model.predict(X_test)
 infos = model.evaluate(X_test, Y_test, verbose=0)
 single_acc, seq_acc = cal_acc(probs,Y_test)
 print('Test loss:', infos[0])
+print('Test info:')
+print(infos)
 print('Test single accuracy:', single_acc)
 print('Test sequence accuracy:', seq_acc)
 

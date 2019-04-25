@@ -323,6 +323,23 @@ def get_train_data_no_pos_info():
     with open('../data/train_no_pos_128.pkl', "wb") as f:
         pickle.dump([X_train, Y_train], f)
 
+
+def get_data():
+    print('processing data')
+
+    root_path = '../data/train/'
+    X_train, Y_train = process_raw_data(root_path)
+    print('X_train:',X_train.shape)
+    print('Y_train:',Y_train.shape)
+
+    root_path = '../data/test/'
+    X_test, Y_test = process_raw_data(root_path)
+    print('X_test:',X_test.shape)
+    print('Y_test:',Y_test.shape)
+
+    print('finish processing data')
+    return X_train,Y_train,X_test,Y_test
+
 def get_data_no_pos_info():
     print('processing training data')
     get_train_data_no_pos_info()
