@@ -1,13 +1,12 @@
-from keras.layers import Flatten, Dense, Dropout,Input,Activation,MaxPooling2D
+from keras.layers import Flatten, Dense, Dropout,Input
 from keras.applications import resnet50
 from keras.models import Model
 from keras.layers.normalization import BatchNormalization
-from keras import optimizers
 import numpy as np
 import pickle
 import matplotlib.pyplot as plt
 base_model = resnet50.ResNet50(include_top=False, weights='imagenet', input_tensor=Input(shape=(64,64,3)), pooling=True, classes=1000)
-from utils import get_data
+
 def cal_acc(probs,Y):
     probs = np.array(probs)
     Y = np.array(Y)
@@ -30,12 +29,10 @@ def cal_acc(probs,Y):
     seq_acc = multi_true_cnt / Y.shape[0]
     return single_digit_acc,seq_acc
 
-x = MaxPooling2D(pool_size=(2,2))(base_model.output)
-x = Flatten()(x)
-x = Dense(128,activation=None)(x)
-x = BatchNormalization()(x)
-x = Activation('relu')(x)
+x = Flatten()(base_model.output)
+x = Dense(128,activation='relu')(x)
 x = Dropout(0.2)(x)
+x = BatchNormalization()(x)
 pred1 = Dense(11,activation='softmax')(x)
 pred2 = Dense(11,activation='softmax')(x)
 pred3 = Dense(11,activation='softmax')(x)
@@ -47,7 +44,11 @@ model = Model(input=base_model.input,output = outputs)
 model.compile(optimizer='Adam', loss='categorical_crossentropy', metrics=['accuracy'])
 model.summary()
 
-X_train,Y_train,X_test,Y_test = get_data()
+with open('../data/train_rgb.pkl', 'rb') as f:
+    X_train, Y_train = pickle.load(f)
+
+with open('../data/test_no_pos.pkl', 'rb') as f:
+    X_test, Y_test = pickle.load(f)
 
 Y_train = [
     Y_train[:,0,:],
@@ -67,7 +68,7 @@ Y_test = [
 
 history = model.fit(x = X_train,y = Y_train,
                                  batch_size = 256,
-                                 epochs= 1,
+                                 epochs= 50,
                                  verbose=1,
                                  validation_split=0.05,
                                  shuffle = True
@@ -84,8 +85,6 @@ probs = model.predict(X_test)
 infos = model.evaluate(X_test, Y_test, verbose=0)
 single_acc, seq_acc = cal_acc(probs,Y_test)
 print('Test loss:', infos[0])
-print('Test info:')
-print(infos)
 print('Test single accuracy:', single_acc)
 print('Test sequence accuracy:', seq_acc)
 

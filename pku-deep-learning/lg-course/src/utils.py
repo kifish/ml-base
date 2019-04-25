@@ -6,7 +6,7 @@ import os
 import matplotlib.pyplot as plt
 from keras.utils import to_categorical
 from PIL import Image
-import pickle
+
 # Bounding Box
 class BBox:
     def __init__(self):
@@ -216,7 +216,7 @@ def process_digits(Y):
         Y_one_hot.append(y_one_hot)
     Y_one_hot = np.array(Y_one_hot)
     return Y_one_hot
-def process_raw_data(root_path):
+def process_test_data(root_path):
     X, _, Y = load_data(root_path, True) # verbose output
     n_imgs = len(X)
     print('the number of images:',n_imgs)
@@ -224,7 +224,7 @@ def process_raw_data(root_path):
     print('processing...')
     for i in range(n_imgs):
         img = X[i]
-        img = img.resize((128,128)) #64*64改成128*128;128*128内存不够，还是改成64*64
+        img = img.resize((64,64))
         img = np.array(img)
         X[i] = img
     X = normalize(X)
@@ -295,6 +295,7 @@ def test_load_data():
 
 
 def show_imgs():
+    import pickle
     with open('../data/train.pkl', 'rb') as f:
         X_train, Y_train = pickle.load(f)
     plt.subplot(2,1,1)
@@ -303,50 +304,18 @@ def show_imgs():
     plt.imshow(X_train[1])
     plt.show()
 
-def get_test_data_no_pos_info():
-    # rgb
+def get_rgb_data_no_pos_info():
     # no position information
+    import pickle
     root_path = '../data/test/'
-    X_test, Y_test = process_raw_data(root_path)
+    X_test, Y_test = process_test_data(root_path)
     print('X_test:',X_test.shape)
     print('Y_test:',Y_test.shape)
-    with open('../data/test_no_pos_128.pkl', "wb") as f:
+    with open('../data/test_no_pos.pkl', "wb") as f:
         pickle.dump([X_test, Y_test], f)
 
-def get_train_data_no_pos_info():
-    # rgb
-    # no position information
-    root_path = '../data/train/'
-    X_train, Y_train = process_raw_data(root_path)
-    print('X_train:',X_train.shape)
-    print('Y_train:',Y_train.shape)
-    with open('../data/train_no_pos_128.pkl', "wb") as f:
-        pickle.dump([X_train, Y_train], f)
-
-
-def get_data():
-    print('processing data')
-
-    root_path = '../data/train/'
-    X_train, Y_train = process_raw_data(root_path)
-    print('X_train:',X_train.shape)
-    print('Y_train:',Y_train.shape)
-
-    root_path = '../data/test/'
-    X_test, Y_test = process_raw_data(root_path)
-    print('X_test:',X_test.shape)
-    print('Y_test:',Y_test.shape)
-
-    print('finish processing data')
-    return X_train,Y_train,X_test,Y_test
-
-def get_data_no_pos_info():
-    print('processing training data')
-    get_train_data_no_pos_info()
-    print('processing test data')
-    get_test_data_no_pos_info()
 if __name__ == "__main__":
-    get_data_no_pos_info()
+    get_rgb_data_no_pos_info()
 
 
 
