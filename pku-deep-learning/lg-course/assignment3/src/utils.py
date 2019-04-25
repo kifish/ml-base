@@ -224,7 +224,7 @@ def process_raw_data(root_path):
     print('processing...')
     for i in range(n_imgs):
         img = X[i]
-        img = img.resize((128,128)) #64*64改成128*128;128*128内存不够，还是改成64*64
+        img = img.resize((64,64)) #64*64改成128*128;128*128内存不够，还是改成64*64
         img = np.array(img)
         X[i] = img
     X = normalize(X)
@@ -310,7 +310,7 @@ def get_test_data_no_pos_info():
     X_test, Y_test = process_raw_data(root_path)
     print('X_test:',X_test.shape)
     print('Y_test:',Y_test.shape)
-    with open('../data/test_no_pos_128.pkl', "wb") as f:
+    with open('../data/test_no_pos_64.pkl', "wb") as f:
         pickle.dump([X_test, Y_test], f)
 
 def get_train_data_no_pos_info():
@@ -320,7 +320,7 @@ def get_train_data_no_pos_info():
     X_train, Y_train = process_raw_data(root_path)
     print('X_train:',X_train.shape)
     print('Y_train:',Y_train.shape)
-    with open('../data/train_no_pos_128.pkl', "wb") as f:
+    with open('../data/train_no_pos_64.pkl', "wb") as f: #128容易爆内存
         pickle.dump([X_train, Y_train], f)
 
 
