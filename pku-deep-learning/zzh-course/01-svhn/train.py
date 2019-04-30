@@ -36,7 +36,7 @@ def main():
     parser.add_argument('-l', '--loss', default='softmax')
     args = parser.parse_args()
 
-    assert args.loss in ['softmax', 'abs-max', 'square-max', 'plus-one-abs-max', 'non-negative-max','l2']
+    assert args.loss in ['softmax', 'abs-max', 'square-max', 'plus-one-abs-max', 'non-negative-max']
 
     ## load dataset
     train_batch_gnr, train_set = get_dataset_batch(ds_name='train')
