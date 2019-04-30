@@ -47,9 +47,9 @@ class Model():
                 conv_filter = tf.get_variable(name='filter', shape=shape,
                                 initializer=tf.random_normal_initializer(), regularizer=self.reg)
                 p = mode
-                x = tf.math.pow(inp,p)
+                x = tf.pow(inp,p)
                 x = tf.nn.conv2d(x,conv_filter,strides=[1,stride,stride,1],padding=padding,name = name,data_format='NHWC')
-                x = tf.math.pow(x,1/p)
+                x = tf.pow(x,1/p)
         return x
 
     def _fc_layer(self, name, inp, units, dropout=0.5):
