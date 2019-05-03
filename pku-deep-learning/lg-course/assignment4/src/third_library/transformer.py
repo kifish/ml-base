@@ -9,7 +9,8 @@ import tensorflow as tf
 try:
 	from dataloader import TokenList, pad_to_longest
 	# for transformer
-except: pass
+except:
+	pass
 
 class LayerNormalization(Layer):
 	def __init__(self, eps=1e-6, **kwargs):
@@ -277,21 +278,21 @@ class InferRNN(Layer):
 		return output
 
 class Transformer:
-	def __init__(self, i_tokens, o_tokens, len_limit, d_model=256, \
+	def __init__(self, i_tokens, o_tokens, len_limit, dim_model=256, \
 			  d_inner_hid=512, n_head=4, d_k=0, d_v=0, layers=2, dropout=0.1, \
 			  share_word_emb=False):
 		self.i_tokens = i_tokens
 		self.o_tokens = o_tokens
 		self.len_limit = len_limit
 		self.src_loc_info = True
-		self.d_model = d_model
+		self.d_model = dim_model
 		self.decode_model = None
 		self.readout_model = None
 		self.layers = layers
-		d_emb = d_model
+		d_emb = dim_model
 
-		if d_k == 0 or d_v == 0: d_k = d_v = d_model // n_head
-		assert d_k * n_head == d_model and d_v == d_k
+		if d_k == 0 or d_v == 0: d_k = d_v = dim_model // n_head
+		assert d_k * n_head == dim_model and d_v == d_k
 
 		self.pos_emb = Embedding(len_limit, d_emb, trainable=False, \
 						   weights=[GetPosEncodingMatrix(len_limit, d_emb)])
@@ -304,8 +305,8 @@ class Transformer:
 			self.o_word_emb = i_word_emb
 		else: self.o_word_emb = Embedding(o_tokens.num(), d_emb)
 
-		self.encoder = SelfAttention(d_model, d_inner_hid, n_head, d_k, d_v, layers, dropout)
-		self.decoder = Decoder(d_model, d_inner_hid, n_head, d_k, d_v, layers, dropout)
+		self.encoder = SelfAttention(dim_model, d_inner_hid, n_head, d_k, d_v, layers, dropout)
+		self.decoder = Decoder(dim_model, d_inner_hid, n_head, d_k, d_v, layers, dropout)
 		self.target_layer = TimeDistributed(Dense(o_tokens.num(), use_bias=False))
 
 	def get_pos_seq(self, x):
@@ -360,7 +361,7 @@ class Transformer:
 		self.model.compile(optimizer, None)
 		self.model.metrics_names.append('ppl')
 		self.model.metrics_tensors.append(self.ppl)
-		self.model.metrics_names.append('accu')
+		self.model.metrics_names.append('acc')
 		self.model.metrics_tensors.append(self.accu)
 
 	def make_src_seq_matrix(self, input_seq):
