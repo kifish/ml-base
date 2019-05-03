@@ -58,5 +58,11 @@ else:
     s2s.model.fit_generator(gen, steps_per_epoch=2000, epochs=5, validation_data=([Xvalid, Yvalid], None),callbacks=[lr_scheduler, model_saver])
     s2s.compile(opt, active_layers=2)
     s2s.model.fit_generator(gen, steps_per_epoch=2000, epochs=5, validation_data=([Xvalid, Yvalid], None),callbacks=[lr_scheduler, model_saver])
-    s2s.compile(opt, active_layers=3)
+    s2s.compile(opt, active_layers=3) #active_layers是指从第一层算起，允许训练的层数，由于设定transformer的层数是2层，因此这里设定3是无意义的。
     s2s.model.fit_generator(gen, steps_per_epoch=2000, epochs=60, validation_data=([Xvalid, Yvalid], None),callbacks=[lr_scheduler, model_saver])
+
+
+
+#最终val_acc 是0.37左右。
+
+
