@@ -30,7 +30,7 @@ class Config:
     snapshot_interval = 2
     test_interval = 1
 
-    use_extra_data = False
+    use_extra_data = True
 
     @property
     def input_shape(self):
