@@ -30,7 +30,7 @@ save_path = '../../tmp/eng2chn.model.h5'
 lr_scheduler = LRSchedulerPerStep(dim_model, 4000)
 model_saver = ModelCheckpoint(save_path, save_best_only=True, save_weights_only=True)
 
-s2s.compile(Adam(0.0005, 0.9, 0.98, epsilon=1e-9))
+s2s.compile(Adam(0.0001, 0.9, 0.98, epsilon=1e-9))
 try:
 	s2s.model.load_weights(save_path)
 except:
