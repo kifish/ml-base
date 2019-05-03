@@ -25,14 +25,16 @@ d_model = 256
 s2s = Transformer(itokens, otokens, len_limit=70, d_model=d_model, d_inner_hid=512, \
 				   n_head=8, layers=2, dropout=0.1)
 
-mfile = 'models/en2de.model.h5'
+save_path = '../../dataset/en2de.model.h5'
 
 lr_scheduler = LRSchedulerPerStep(d_model, 4000)
-model_saver = ModelCheckpoint(mfile, save_best_only=True, save_weights_only=True)
+model_saver = ModelCheckpoint(save_path, save_best_only=True, save_weights_only=True)
 
 s2s.compile(Adam(0.001, 0.9, 0.98, epsilon=1e-9))
-try: s2s.model.load_weights(mfile)
-except: print('\n\nnew model')
+try:
+	s2s.model.load_weights(save_path)
+except:
+	print('\n\nnew model')
 
 if 'eval' in sys.argv:
 	print(s2s.decode_sequence_readout('A black dog eats food .'.split(), delimiter=' '))
