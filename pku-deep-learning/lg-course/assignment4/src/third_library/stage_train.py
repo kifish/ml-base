@@ -52,7 +52,7 @@ elif 'test' in sys.argv:
 	for x in sents:
 		print(x)
 else:
-    s2s.model.summary()
+    # s2s.model.summary()
     gen = S2SDataGenerator('../../dataset/train_eng2chn.txt', itokens, otokens, batch_size=32, max_len=120)
     s2s.compile(opt, active_layers=1)
     s2s.model.fit_generator(gen, steps_per_epoch=2000, epochs=5, validation_data=([Xvalid, Yvalid], None),callbacks=[lr_scheduler, model_saver])
