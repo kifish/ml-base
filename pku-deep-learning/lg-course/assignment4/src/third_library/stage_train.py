@@ -9,7 +9,7 @@ Xvalid, Yvalid = MakeS2SData('../../dataset/val_eng2chn.txt', itokens, otokens, 
 
 print('seq 1 words:', itokens.num())
 print('seq 2 words:', otokens.num())
-print('train shapes:', Xtrain.shape, Ytrain.shape)
+# print('train shapes:', Xtrain.shape, Ytrain.shape)
 print('valid shapes:', Xvalid.shape, Yvalid.shape)
 
 '''
@@ -30,7 +30,7 @@ save_path = '../../tmp/eng2chn.model.h5'
 lr_scheduler = LRSchedulerPerStep(dim_model, 4000)
 model_saver = ModelCheckpoint(save_path, save_best_only=True, save_weights_only=True)
 
-s2s.compile(Adam(0.0001, 0.9, 0.98, epsilon=1e-9))
+opt = Adam(0.001, 0.9, 0.98, epsilon=1e-9)
 try:
 	s2s.model.load_weights(save_path)
 except:
