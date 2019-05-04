@@ -172,8 +172,8 @@ def get_cropped_box(left,top,width,height):
                                                     center_y - max_side / 2.0,
                                                     max_side,
                                                     max_side)
-    cropped_left, cropped_top, cropped_width, cropped_height = (int(round(box_left - 0.15 * box_width)),
-                                                                int(round(box_top - 0.15 * box_height)),
+    cropped_left, cropped_top, cropped_width, cropped_height = (max(int(round(box_left - 0.15 * box_width)),0),
+                                                                max(int(round(box_top - 0.15 * box_height)),0),
                                                                 int(round(box_width * 1.3)),
                                                                 int(round(box_height * 1.3)))
     # box_right = box_left + box_width

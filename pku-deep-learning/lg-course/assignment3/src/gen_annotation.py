@@ -46,6 +46,6 @@ def gen_annotation():
             y2 = cropped_top + cropped_height
             row = '{},{},{},{},{},digit'.format(file_path,x1,y1,x2,y2)
             f.write(row+'\n')
-            break
+
 if __name__ == '__main__':
     gen_annotation()
