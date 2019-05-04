@@ -224,7 +224,7 @@ def process_raw_data(root_path):
     print('processing...')
     for i in range(n_imgs):
         img = X[i]
-        img = img.resize((64,64)) #64*64改成128*128;128*128内存不够，还是改成64*64
+        img = img.resize((128,128)) #64*64改成128*128;128*128内存不够，还是改成64*64
         img = np.array(img)
         X[i] = img
     X = normalize(X)
