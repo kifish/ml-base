@@ -38,7 +38,7 @@ def lp_regularizer(scale, p=2, scope=None):
       my_scale = ops.convert_to_tensor(scale,
                                        dtype=weights.dtype.base_dtype,
                                        name='scale')
-      reg_loss = standard_ops.reduce_sum(math_ops.pow(math_ops.abs(weigths), p))
+      reg_loss = standard_ops.reduce_sum(math_ops.pow(math_ops.abs(weights), p))
       return standard_ops.multiply(my_scale, reg_loss, name=name)
 
-return lp
+  return lp

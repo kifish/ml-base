@@ -11,7 +11,7 @@
 import tensorflow as tf
 import tensorflow.contrib as tf_contrib
 from common import config
-
+from regularizer import lp_regularizer
 
 class Model():
     def __init__(self):
@@ -19,7 +19,7 @@ class Model():
         self.weight_init = tf_contrib.layers.variance_scaling_initializer(factor=1.0,
                                 mode='FAN_IN', uniform=False)
         self.bias_init = tf.zeros_initializer()
-        self.reg = tf_contrib.layers.l2_regularizer(config.weight_decay)
+        self.reg = lp_regularizer(config.weight_decay,p=2)
 
     def _conv_layer(self, name, inp, kernel_shape, stride, padding='SAME',is_training=False):
         with tf.variable_scope(name) as scope:
