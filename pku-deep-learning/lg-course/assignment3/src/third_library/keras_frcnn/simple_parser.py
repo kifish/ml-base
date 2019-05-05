@@ -39,7 +39,7 @@ def get_data(input_path):
 				all_imgs[filename]['width'] = cols
 				all_imgs[filename]['height'] = rows
 				all_imgs[filename]['bboxes'] = []
-				if np.random.randint(0,6) > 0:
+				if np.random.randint(0,9) > 0: #ratio
 					all_imgs[filename]['imageset'] = 'trainval'
 				else:
 					all_imgs[filename]['imageset'] = 'test'

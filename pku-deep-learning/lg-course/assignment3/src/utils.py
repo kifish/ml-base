@@ -4,9 +4,9 @@ import h5py
 import numpy as np
 import os
 import matplotlib.pyplot as plt
-from keras.utils import to_categorical
 from PIL import Image
 import pickle
+from pandas import DataFrame
 # Bounding Box
 class BBox:
     def __init__(self):
@@ -217,6 +217,7 @@ def process_digits(Y):
     Y_one_hot = np.array(Y_one_hot)
     return Y_one_hot
 def process_raw_data(root_path):
+    from keras.utils import to_categorical #为了加速，有些情况下没必要导入这个包
     X, _, Y = load_data(root_path, True) # verbose output
     n_imgs = len(X)
     print('the number of images:',n_imgs)
@@ -233,7 +234,98 @@ def process_raw_data(root_path):
     print('Y:',Y.shape)
     return X,Y
 
+
+def crop_training_data(root_path = '../data/train/'):
+    csv_data = {'filenames':[],'labels':[]}
+    samples = load_mat(os.path.join(root_path,'digitStruct.mat'),verbose=False,debug=False)
+    save_root_path = '../data/cropped_train/'
+    if not os.path.exists(save_root_path):
+        os.mkdir(save_root_path)
+    for sample in samples:
+        file_name = sample[0]
+        file_path = os.path.join(root_path, file_name)
+        save_path = os.path.join(save_root_path,file_name)
+        with Image.open(file_path) as img:
+            infos = sample[1:]
+            digits = []
+            boxes = []
+            for info in infos:
+                digits.append(info[0])
+                boxes.append(info[1:])
+            if len(digits) >= 6:
+                continue
+            left,top,width,height = [],[],[],[]
+            for box in boxes:
+                left.append(box[0])
+                top.append(box[1])
+                width.append(box[2])  # 注意顺序
+                height.append(box[3])
+            cropped_left, cropped_top, cropped_width, cropped_height = get_cropped_box(left, top, width, height)
+            img = img.crop([cropped_left, cropped_top, cropped_left + cropped_width, cropped_top + cropped_height])
+            img = img.resize((64, 64))
+            img.save(save_path)
+            csv_data['filenames'].append(file_name)
+            #29930.png有6个数字，要跳过
+            label = [[0 for j in range(11)] for i in range(5)]
+            for idx, digit in enumerate(digits):
+                label[idx][digit] = 1
+            for idx in range(len(digits), 5):
+                label[idx][10] = 1
+            csv_data['labels'].append(label)
+    df = DataFrame(csv_data,columns=['filenames','labels'])
+    df.to_csv('../data/cropped_train/meta_info.csv')
+
+
+def gen_csv(root_path = '../data/train/',save_path = '../data/train_meta_info.csv'):
+    print('generating csv...')
+    csv_data = {'filenames':[],'digit1':[],'digit2':[],'digit3':[],'digit4':[],'digit5':[]}
+    print('loading mat info')
+    samples = load_mat(os.path.join(root_path,'digitStruct.mat'),verbose=False,debug=False)
+    # cnt = 0
+    for sample in samples:
+        file_name = sample[0]
+        infos = sample[1:]
+        digits = []
+        boxes = []
+        for info in infos:
+            digits.append(info[0])
+            boxes.append(info[1:])
+        if len(digits) >= 6:
+            continue
+        csv_data['filenames'].append(file_name)
+        for idx,digit in enumerate(digits):
+            csv_data['digit{}'.format(idx+1)].append(digit)
+        for idx in range(len(digits),5):
+            csv_data['digit{}'.format(idx + 1)].append(10)
+        # print(cnt)
+        # if cnt > 17:
+        #     break
+        # cnt += 1
+    df = DataFrame(csv_data,columns=['filenames','labels'])
+    df.to_csv(save_path)
+
+def load_detected_data(root_path,results_img_path,verbose = False):
+    from keras.utils import to_categorical
+    X = []
+    Y = []
+    samples = load_mat(os.path.join(root_path,'digitStruct.mat'),verbose,False)
+    for sample in samples:
+        file_name = sample[0]
+        file_path = os.path.join(results_img_path,file_name)
+        with Image.open(file_path) as img:
+            infos = sample[1:]
+            digits = []
+            for info in infos:
+                digits.append(info[0])
+            X.append(img.copy())
+        Y.append(digits)
+    X = np.array(X)
+    X = normalize(X)
+    Y = process_digits(Y)
+    return X,Y
+
 def process_data(root_path):
+    from keras.utils import to_categorical
     X, X_boxes, Y = load_data(root_path, True) # verbose output
     X_box = process_box(X_boxes)
     X_box = np.array(X_box)
@@ -326,7 +418,6 @@ def get_train_data_no_pos_info():
 
 def get_data():
     print('processing data')
-
     root_path = '../data/train/'
     X_train, Y_train = process_raw_data(root_path)
     print('X_train:',X_train.shape)
@@ -345,8 +436,17 @@ def get_data_no_pos_info():
     get_train_data_no_pos_info()
     print('processing test data')
     get_test_data_no_pos_info()
+
 if __name__ == "__main__":
-    get_data_no_pos_info()
+    root_path = '../data/train/'
+    save_path = '../data/train_meta_info.csv'
+    gen_csv(root_path, save_path)
+
+    root_path = '../data/test/'
+    save_path = '../data/test_meta_info.csv'
+    gen_csv(root_path, save_path)
+
+
 
 
 
