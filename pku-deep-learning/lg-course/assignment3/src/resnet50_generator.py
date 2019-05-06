@@ -103,6 +103,7 @@ history = model.fit_generator(generator_wrapper(train_generator),
 with open('../data/test_rgb.pkl', 'rb') as f:
     X_test, Y_test = pickle.load(f)
 del X_test
+
 Y_test = [
     Y_test[:,0,:],
     Y_test[:,1,:],
@@ -124,9 +125,9 @@ test_generator=test_datagen.flow_from_dataframe(
                         target_size=(img_height,img_weight)
                         )
 test_generator.reset() #important
-probs = model.predict_generator(test_generator,
+probs = model.predict_generator(generator_wrapper(test_generator),
                                 verbose=1)
-infos = model.evaluate_generator(test_generator, verbose=0)
+infos = model.evaluate_generator(generator_wrapper(test_generator), verbose=0)
 single_acc, seq_acc = cal_acc(probs,Y_test)
 print('Test loss:', infos[0])
 print('Test info:')
