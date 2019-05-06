@@ -7,6 +7,8 @@ import matplotlib.pyplot as plt
 from PIL import Image
 import pickle
 from pandas import DataFrame
+from keras.utils import to_categorical
+
 # Bounding Box
 class BBox:
     def __init__(self):
@@ -217,7 +219,6 @@ def process_digits(Y):
     Y_one_hot = np.array(Y_one_hot)
     return Y_one_hot
 def process_raw_data(root_path):
-    from keras.utils import to_categorical #为了加速，有些情况下没必要导入这个包
     X, _, Y = load_data(root_path, True) # verbose output
     n_imgs = len(X)
     print('the number of images:',n_imgs)
@@ -305,7 +306,6 @@ def gen_csv(root_path = '../data/train/',save_path = '../data/train_meta_info.cs
     df.to_csv(save_path)
 
 def load_detected_data(root_path,results_img_path,verbose = False):
-    from keras.utils import to_categorical
     X = []
     Y = []
     samples = load_mat(os.path.join(root_path,'digitStruct.mat'),verbose,False)
@@ -325,7 +325,6 @@ def load_detected_data(root_path,results_img_path,verbose = False):
     return X,Y
 
 def process_data(root_path):
-    from keras.utils import to_categorical
     X, X_boxes, Y = load_data(root_path, True) # verbose output
     X_box = process_box(X_boxes)
     X_box = np.array(X_box)
