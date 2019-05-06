@@ -73,6 +73,8 @@ single_acc, seq_acc = cal_acc(probs,Y_train)
 print('Train loss:', infos[0])
 print('Train single accuracy:', single_acc)
 print('Train sequence accuracy:', seq_acc)
+print('Train info:')
+print(infos)
 del X_train,Y_train
 
 
@@ -94,10 +96,9 @@ single_acc, seq_acc = cal_acc(probs,Y_test)
 print('Test loss:', infos[0])
 print('Test single accuracy:', single_acc)
 print('Test sequence accuracy:', seq_acc)
+print('Test info:')
+print(infos)
 
-
-#acc = history.history['acc']
-#val_acc = history.history['val_acc']
 loss = history.history['loss']
 val_loss = history.history['val_loss']
 epochs = range(1, len(loss) + 1)
@@ -111,7 +112,7 @@ plt.xlabel('Epochs')
 plt.ylabel('Loss')
 plt.legend()
 #plt.show()
-plt.savefig('resent50_with_fasterrcnn_Training and validation loss.png')
+plt.savefig('resnet50_with_fasterrcnn_Training_and_validation_loss.png')
 
 # plt.figure(1)
 # plt.plot(epochs, acc, 'bo', label='Training acc')

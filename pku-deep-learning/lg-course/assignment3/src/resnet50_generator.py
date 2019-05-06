@@ -53,13 +53,13 @@ from keras_preprocessing.image import ImageDataGenerator
 import pandas as pd
 from keras.utils import to_categorical
 df = pd.read_csv('../data/train_meta_info.csv')
-train_datagen = ImageDataGenerator(featurewise_center=False,validation_split=0.2)
+train_datagen = ImageDataGenerator(featurewise_center=False,validation_split=0.05)
 train_generator=train_datagen.flow_from_dataframe(
                         dataframe=df,
                         directory="../data/train",
                         x_col="filenames",
                         y_col=["digit1","digit2","digit3","digit4","digit5"],
-                        batch_size=32,
+                        batch_size=256,
                         seed=42,
                         shuffle=True,
                         class_mode='other',
@@ -91,57 +91,58 @@ history = model.fit_generator(generator_wrapper(train_generator),
                                  epochs= 30,
                                  verbose=1,
                                  validation_data=generator_wrapper(validation_generator),
-                                validation_steps=1,
-                                # validation_steps=STEP_SIZE_VALID,
-                                 shuffle = True,
-                                use_multiprocessing=True,
-                                    workers=6
-                              ) # cpu are used to generate data
+                                validation_steps=STEP_SIZE_VALID,
+                                 shuffle = True
+                              )
+# use_multiprocessing=True,
+# workers=6
+# cpu are used to generate data;however, multiple workers may duplicate data
+with open('../data/test_rgb.pkl', 'rb') as f:
+    X_test, Y_test = pickle.load(f)
+del X_test
+Y_test = [
+    Y_test[:,0,:],
+    Y_test[:,1,:],
+    Y_test[:,2,:],
+    Y_test[:,3,:],
+    Y_test[:,4,:]
+]
+df = pd.read_csv('../data/test_meta_info.csv')
+test_datagen=ImageDataGenerator()
+test_generator=test_datagen.flow_from_dataframe(
+                        dataframe=df,
+                        directory="../data/test",
+                        x_col="filenames",
+                        y_col=["digit1","digit2","digit3","digit4","digit5"],
+                        batch_size=256,
+                        seed=42,
+                        shuffle=False,
+                        class_mode='other',
+                        target_size=(224,224)
+                        )
+test_generator.reset() #important
+probs = model.predict_generator(test_generator,
+                                verbose=1)
+infos = model.evaluate_generator(test_generator, verbose=0)
+single_acc, seq_acc = cal_acc(probs,Y_test)
+print('Test loss:', infos[0])
+print('Test info:')
+print(infos)
+print('Test single accuracy:', single_acc)
+print('Test sequence accuracy:', seq_acc)
 
-# probs = model.predict(X_train)
-# infos = model.evaluate(X_train, Y_train, verbose=0)
-# single_acc, seq_acc = cal_acc(probs,Y_train)
-# print('Train loss:', infos[0])
-# print('Train single accuracy:', single_acc)
-# print('Train sequence accuracy:', seq_acc)
-#
-#
-# print('processing data')
-# root_path = '../data/test/'
-# X_test, Y_test = process_raw_data(root_path)
-# print('X_test:', X_test.shape)
-# print('Y_test:', Y_test.shape)
-# Y_test = [
-#     Y_test[:,0,:],
-#     Y_test[:,1,:],
-#     Y_test[:,2,:],
-#     Y_test[:,3,:],
-#     Y_test[:,4,:]
-# ]
-# probs = model.predict(X_test)
-# infos = model.evaluate(X_test, Y_test, verbose=0)
-# single_acc, seq_acc = cal_acc(probs,Y_test)
-# print('Test loss:', infos[0])
-# print('Test info:')
-# print(infos)
-# print('Test single accuracy:', single_acc)
-# print('Test sequence accuracy:', seq_acc)
-#
-#
-# #acc = history.history['acc']
-# #val_acc = history.history['val_acc']
-# loss = history.history['loss']
-# val_loss = history.history['val_loss']
-# epochs = range(1, len(loss) + 1)
-# # "bo" is for "blue dot"
-# plt.figure(0)
-# plt.plot(epochs, loss, 'bo', label='Training loss')
-# # b is for "solid blue line"
-# plt.plot(epochs, val_loss, 'b', label='Validation loss')
-# plt.title('Training and validation loss')
-# plt.xlabel('Epochs')
-# plt.ylabel('Loss')
-# plt.legend()
-# #plt.show()
-# plt.savefig('no_detector_60-256-128*-sgd-0.01-Training and validation loss.png')
+
+loss = history.history['loss']
+val_loss = history.history['val_loss']
+epochs = range(1, len(loss) + 1)
+# "bo" is for "blue dot"
+plt.figure(0)
+plt.plot(epochs, loss, 'bo', label='Training loss')
+# b is for "solid blue line"
+plt.plot(epochs, val_loss, 'b', label='Validation loss')
+plt.title('Training and validation loss')
+plt.xlabel('Epochs')
+plt.ylabel('Loss')
+plt.legend()
+plt.savefig('generator-256-224*-Adam-0.01-Training_and_validation_loss.png')
 
