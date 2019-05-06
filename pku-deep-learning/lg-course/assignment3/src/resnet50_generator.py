@@ -6,8 +6,8 @@ from keras import optimizers
 import numpy as np
 import pickle
 import matplotlib.pyplot as plt
-base_model = resnet50.ResNet50(include_top=False, weights='imagenet', input_tensor=Input(shape=(128,128,3)), pooling=True, classes=1000)
-from utils import process_raw_data
+base_model = resnet50.ResNet50(include_top=False, weights='imagenet', input_tensor=Input(shape=(224,224,3)), pooling=True, classes=1000)#pooling=True即要2048前的pooling层,resnet50里面是avg_pooling
+
 def cal_acc(probs,Y):
     probs = np.array(probs)
     Y = np.array(Y)
@@ -31,10 +31,7 @@ def cal_acc(probs,Y):
     return single_digit_acc,seq_acc
 
 
-
-
-x = MaxPooling2D(pool_size=(2,2))(base_model.output)
-x = Flatten()(x)
+x = Flatten()(base_model.output)
 x = Dense(128,activation=None)(x)
 x = BatchNormalization()(x)
 x = Activation('relu')(x)
@@ -52,7 +49,6 @@ adam = optimizers.Adam(lr = 0.01)
 model.compile(optimizer=adam, loss='categorical_crossentropy', metrics=['accuracy'])
 model.summary()
 
-
 from keras_preprocessing.image import ImageDataGenerator
 import pandas as pd
 from keras.utils import to_categorical
@@ -67,7 +63,7 @@ train_generator=train_datagen.flow_from_dataframe(
                         seed=42,
                         shuffle=True,
                         class_mode='other',
-                        target_size=(128,128),
+                        target_size=(224,224),
                         subset='training')
 validation_generator = train_datagen.flow_from_dataframe(
     dataframe=df,
@@ -78,7 +74,7 @@ validation_generator = train_datagen.flow_from_dataframe(
     seed=42,
     shuffle=True,
     class_mode='other',
-    target_size=(128, 128),
+    target_size=(224, 224),
     subset='validation')
 
 def generator_wrapper(generator):
@@ -86,12 +82,17 @@ def generator_wrapper(generator):
         batch_y = to_categorical(batch_y)
         yield (batch_x,[batch_y[:,i,:] for i in range(5)])
 
+
+STEP_SIZE_TRAIN=train_generator.n // train_generator.batch_size
+STEP_SIZE_VALID=validation_generator.n // validation_generator.batch_size
+
 history = model.fit_generator(generator_wrapper(train_generator),
-                                 batch_size = 12,
+                                steps_per_epoch=STEP_SIZE_TRAIN,
                                  epochs= 30,
                                  verbose=1,
                                  validation_data=generator_wrapper(validation_generator),
-                                 shuffle = True
+                                validation_steps=STEP_SIZE_VALID
+                                 # shuffle = True
                               )
 # probs = model.predict(X_train)
 # infos = model.evaluate(X_train, Y_train, verbose=0)

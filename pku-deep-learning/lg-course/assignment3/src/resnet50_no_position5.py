@@ -6,7 +6,7 @@ from keras import optimizers
 import numpy as np
 import pickle
 import matplotlib.pyplot as plt
-base_model = resnet50.ResNet50(include_top=False, weights='imagenet', input_tensor=Input(shape=(128,128,3)), pooling=True, classes=1000)
+base_model = resnet50.ResNet50(include_top=False, weights='imagenet', input_tensor=Input(shape=(224,224,3)), pooling=True, classes=1000)#pooling=True即要2048前的pooling层,resnet50里面是avg_pooling
 from utils import get_data
 def cal_acc(probs,Y):
     probs = np.array(probs)
@@ -30,8 +30,7 @@ def cal_acc(probs,Y):
     seq_acc = multi_true_cnt / Y.shape[0]
     return single_digit_acc,seq_acc
 
-x = MaxPooling2D(pool_size=(2,2))(base_model.output)
-x = Flatten()(x)
+x = Flatten()(base_model.output)
 x = Dense(128,activation=None)(x)
 x = BatchNormalization()(x)
 x = Activation('relu')(x)

@@ -15,7 +15,9 @@ __pycache__/
 /pku-deep-learning/zzh-course/01-svhn/train_log/
 */tmp/
 /pku-deep-learning/lg-course/assignment4/tmp/
-
+/pku-deep-learning/lg-course/assignment3/src/third_library/config.pickle
+*.hdf5
+*.h5 
 
 
 
