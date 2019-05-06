@@ -9,8 +9,8 @@ import matplotlib.pyplot as plt
 
 img_height = 128
 img_weight = 128
-batch_size = 256
-base_model = resnet50.ResNet50(include_top=False, weights='imagenet', input_tensor=Input(shape=(img_height,img_weight,3)), pooling=False, classes=1000)#pooling=True即要2048前的pooling层,resnet50里面是avg_pooling
+batch_size = 100 # batch_size 256的话则内存不足！！！batch_size 256至少消耗11GB以上的内存。
+base_model = resnet50.ResNet50(include_top=False, weights='imagenet', input_tensor=Input(shape=(img_height,img_weight,3)), pooling=True, classes=1000)#pooling=True即要2048前的pooling层,resnet50里面是avg_pooling
 
 def cal_acc(probs,Y):
     probs = np.array(probs)
@@ -34,7 +34,7 @@ def cal_acc(probs,Y):
     seq_acc = multi_true_cnt / Y.shape[0]
     return single_digit_acc,seq_acc
 
-x = Flatten()(base_model.output)
+x = Flatten()(base_model.output) #2048要比8192好很多
 x = Dense(128,activation=None)(x)
 x = BatchNormalization()(x)
 x = Activation('relu')(x)
@@ -91,12 +91,12 @@ STEP_SIZE_VALID=validation_generator.n // validation_generator.batch_size
 
 history = model.fit_generator(generator_wrapper(train_generator),
                                 steps_per_epoch=STEP_SIZE_TRAIN,
-                                 epochs= 1,
+                                 epochs= 30,
                                  verbose=1,
                                  validation_data=generator_wrapper(validation_generator),
                                 validation_steps=STEP_SIZE_VALID,
                                 use_multiprocessing = False,
-                                max_queue_size = 5,
+                                max_queue_size = 1,
                                  shuffle = True,
                                 workers=0 #avoid OOM error
                               )
@@ -132,13 +132,13 @@ probs = model.predict_generator(generator_wrapper(test_generator),
                                 steps = test_generator.n // test_generator.batch_size + 1,
                                 verbose=1,
                                 use_multiprocessing=False,
-                                max_queue_size=5,
+                                max_queue_size=1,
                                 workers=0
                                 )
 infos = model.evaluate_generator(generator_wrapper(test_generator), verbose=0,
                                 steps = test_generator.n // test_generator.batch_size + 1,
                                  use_multiprocessing=False,
-                                 max_queue_size=5,
+                                 max_queue_size=1,
                                  workers=0
                                  )
 single_acc, seq_acc = cal_acc(probs,Y_test)
@@ -161,5 +161,5 @@ plt.title('Training and validation loss')
 plt.xlabel('Epochs')
 plt.ylabel('Loss')
 plt.legend()
-plt.savefig('generator-256-224*-Adam-0.01-Training_and_validation_loss.png')
+plt.savefig('generator-256-128*-Adam-0.01-Training_and_validation_loss.png')
 
