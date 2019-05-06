@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 
 img_height = 128
 img_weight = 128
-
+batch_size = 256
 base_model = resnet50.ResNet50(include_top=False, weights='imagenet', input_tensor=Input(shape=(img_height,img_weight,3)), pooling=False, classes=1000)#pooling=True即要2048前的pooling层,resnet50里面是avg_pooling
 
 def cal_acc(probs,Y):
@@ -62,7 +62,7 @@ train_generator=train_datagen.flow_from_dataframe(
                         directory="../data/train",
                         x_col="filenames",
                         y_col=["digit1","digit2","digit3","digit4","digit5"],
-                        batch_size=256,
+                        batch_size=batch_size,
                         seed=42,
                         shuffle=True,
                         class_mode='other',
@@ -73,7 +73,7 @@ validation_generator = train_datagen.flow_from_dataframe(
     directory="../data/train",
     x_col="filenames",
     y_col=["digit1", "digit2", "digit3", "digit4", "digit5"],
-    batch_size=32,
+    batch_size=batch_size,
     seed=42,
     shuffle=True,
     class_mode='other',
@@ -121,7 +121,7 @@ test_generator=test_datagen.flow_from_dataframe(
                         directory="../data/test",
                         x_col="filenames",
                         y_col=["digit1","digit2","digit3","digit4","digit5"],
-                        batch_size=256,
+                        batch_size=batch_size,
                         seed=42,
                         shuffle=False,
                         class_mode='other',
