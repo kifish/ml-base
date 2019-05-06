@@ -6,7 +6,11 @@ from keras import optimizers
 import numpy as np
 import pickle
 import matplotlib.pyplot as plt
-base_model = resnet50.ResNet50(include_top=False, weights='imagenet', input_tensor=Input(shape=(224,224,3)), pooling=False, classes=1000)#pooling=True即要2048前的pooling层,resnet50里面是avg_pooling
+
+img_height = 128
+img_weight = 128
+
+base_model = resnet50.ResNet50(include_top=False, weights='imagenet', input_tensor=Input(shape=(img_height,img_weight,3)), pooling=False, classes=1000)#pooling=True即要2048前的pooling层,resnet50里面是avg_pooling
 
 def cal_acc(probs,Y):
     probs = np.array(probs)
@@ -29,7 +33,6 @@ def cal_acc(probs,Y):
     single_digit_acc = single_true_cnt / Y.shape[0] / Y.shape[1]
     seq_acc = multi_true_cnt / Y.shape[0]
     return single_digit_acc,seq_acc
-
 
 x = Flatten()(base_model.output)
 x = Dense(128,activation=None)(x)
@@ -63,7 +66,7 @@ train_generator=train_datagen.flow_from_dataframe(
                         seed=42,
                         shuffle=True,
                         class_mode='other',
-                        target_size=(224,224),
+                        target_size=(img_height,img_weight),
                         subset='training')
 validation_generator = train_datagen.flow_from_dataframe(
     dataframe=df,
@@ -74,7 +77,7 @@ validation_generator = train_datagen.flow_from_dataframe(
     seed=42,
     shuffle=True,
     class_mode='other',
-    target_size=(224, 224),
+    target_size=(img_height,img_weight),
     subset='validation')
 
 def generator_wrapper(generator):
@@ -88,7 +91,7 @@ STEP_SIZE_VALID=validation_generator.n // validation_generator.batch_size
 
 history = model.fit_generator(generator_wrapper(train_generator),
                                 steps_per_epoch=STEP_SIZE_TRAIN,
-                                 epochs= 30,
+                                 epochs= 1,
                                  verbose=1,
                                  validation_data=generator_wrapper(validation_generator),
                                 validation_steps=STEP_SIZE_VALID,
@@ -118,7 +121,7 @@ test_generator=test_datagen.flow_from_dataframe(
                         seed=42,
                         shuffle=False,
                         class_mode='other',
-                        target_size=(224,224)
+                        target_size=(img_height,img_weight)
                         )
 test_generator.reset() #important
 probs = model.predict_generator(test_generator,
