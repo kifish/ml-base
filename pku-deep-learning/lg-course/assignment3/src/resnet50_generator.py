@@ -95,6 +95,8 @@ history = model.fit_generator(generator_wrapper(train_generator),
                                  verbose=1,
                                  validation_data=generator_wrapper(validation_generator),
                                 validation_steps=STEP_SIZE_VALID,
+                                use_multiprocessing = False,
+                                max_queue_size = 5,
                                  shuffle = True,
                                 workers=0 #avoid OOM error
                               )
@@ -129,10 +131,14 @@ test_generator.reset() #important
 probs = model.predict_generator(generator_wrapper(test_generator),
                                 steps = test_generator.n // test_generator.batch_size + 1,
                                 verbose=1,
+                                use_multiprocessing=False,
+                                max_queue_size=5,
                                 workers=0
                                 )
 infos = model.evaluate_generator(generator_wrapper(test_generator), verbose=0,
                                 steps = test_generator.n // test_generator.batch_size + 1,
+                                 use_multiprocessing=False,
+                                 max_queue_size=5,
                                  workers=0
                                  )
 single_acc, seq_acc = cal_acc(probs,Y_test)
