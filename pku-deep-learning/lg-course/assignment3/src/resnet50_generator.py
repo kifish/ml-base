@@ -127,12 +127,12 @@ test_generator=test_datagen.flow_from_dataframe(
                         )
 test_generator.reset() #important
 probs = model.predict_generator(generator_wrapper(test_generator),
-                                steps = test_generator.n // test_generator.batch_size,
+                                steps = test_generator.n // test_generator.batch_size + 1,
                                 verbose=1,
                                 workers=0
                                 )
 infos = model.evaluate_generator(generator_wrapper(test_generator), verbose=0,
-                                steps = test_generator.n // test_generator.batch_size,
+                                steps = test_generator.n // test_generator.batch_size + 1,
                                  workers=0
                                  )
 single_acc, seq_acc = cal_acc(probs,Y_test)
