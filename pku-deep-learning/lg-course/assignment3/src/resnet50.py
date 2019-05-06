@@ -111,7 +111,3 @@ single_acc, seq_acc = cal_acc(probs,Y_test)
 print('Test loss:', infos[0])
 print('Test single accuracy:', single_acc)
 print('Test sequence accuracy:', seq_acc)
-
-
-
-

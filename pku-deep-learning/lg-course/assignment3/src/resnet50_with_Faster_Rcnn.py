@@ -62,7 +62,7 @@ Y_train = [
 
 history = model.fit(x = X_train,y = Y_train,
                                  batch_size = 256,
-                                 epochs= 20,
+                                 epochs= 3,
                                  verbose=1,
                                  validation_split=0.05,
                                  shuffle = True
@@ -76,8 +76,8 @@ print('Train sequence accuracy:', seq_acc)
 del X_train,Y_train
 
 
-root_path = '../../data/test/'
-results_img_path = '../../data/results_imgs/'
+root_path = '../data/test/'
+results_img_path = '../data/results_imgs/'
 X_test,Y_test = load_detected_data(root_path,results_img_path)
 print('X_test:', X_test.shape)
 print('Y_test:', Y_test.shape)
