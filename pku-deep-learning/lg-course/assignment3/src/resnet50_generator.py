@@ -34,7 +34,8 @@ def cal_acc(probs,Y):
     seq_acc = multi_true_cnt / Y.shape[0]
     return single_digit_acc,seq_acc
 
-x = Flatten()(base_model.output) #2048要比8192好很多
+x = MaxPooling2D(pool_size=(4,4))(base_model.output)
+x = Flatten()(x) #2048要比8192好很多
 x = Dense(128,activation=None)(x)
 x = BatchNormalization()(x)
 x = Activation('relu')(x)
