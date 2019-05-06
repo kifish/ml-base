@@ -6,7 +6,7 @@ from keras import optimizers
 import numpy as np
 import pickle
 import matplotlib.pyplot as plt
-base_model = resnet50.ResNet50(include_top=False, weights='imagenet', input_tensor=Input(shape=(224,224,3)), pooling=True, classes=1000)#pooling=True即要2048前的pooling层,resnet50里面是avg_pooling
+base_model = resnet50.ResNet50(include_top=False, weights='imagenet', input_tensor=Input(shape=(224,224,3)), pooling=False, classes=1000)#pooling=True即要2048前的pooling层,resnet50里面是avg_pooling
 
 def cal_acc(probs,Y):
     probs = np.array(probs)
@@ -91,9 +91,13 @@ history = model.fit_generator(generator_wrapper(train_generator),
                                  epochs= 30,
                                  verbose=1,
                                  validation_data=generator_wrapper(validation_generator),
-                                validation_steps=STEP_SIZE_VALID
-                                 # shuffle = True
-                              )
+                                validation_steps=1,
+                                # validation_steps=STEP_SIZE_VALID,
+                                 shuffle = True,
+                                use_multiprocessing=True,
+                                    workers=6
+                              ) # cpu are used to generate data
+
 # probs = model.predict(X_train)
 # infos = model.evaluate(X_train, Y_train, verbose=0)
 # single_acc, seq_acc = cal_acc(probs,Y_train)

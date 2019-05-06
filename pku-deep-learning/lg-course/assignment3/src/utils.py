@@ -282,7 +282,6 @@ def gen_csv(root_path = '../data/train/',save_path = '../data/train_meta_info.cs
     csv_data = {'filenames':[],'digit1':[],'digit2':[],'digit3':[],'digit4':[],'digit5':[]}
     print('loading mat info')
     samples = load_mat(os.path.join(root_path,'digitStruct.mat'),verbose=False,debug=False)
-    # cnt = 0
     for sample in samples:
         file_name = sample[0]
         infos = sample[1:]
@@ -298,11 +297,7 @@ def gen_csv(root_path = '../data/train/',save_path = '../data/train_meta_info.cs
             csv_data['digit{}'.format(idx+1)].append(digit)
         for idx in range(len(digits),5):
             csv_data['digit{}'.format(idx + 1)].append(10)
-        # print(cnt)
-        # if cnt > 17:
-        #     break
-        # cnt += 1
-    df = DataFrame(csv_data,columns=['filenames','labels'])
+    df = DataFrame(csv_data,columns=['filenames','digit1','digit2','digit3','digit4','digit5'])
     df.to_csv(save_path)
 
 def load_detected_data(root_path,results_img_path,verbose = False):
