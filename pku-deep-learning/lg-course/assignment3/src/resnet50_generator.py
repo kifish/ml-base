@@ -95,7 +95,8 @@ history = model.fit_generator(generator_wrapper(train_generator),
                                  verbose=1,
                                  validation_data=generator_wrapper(validation_generator),
                                 validation_steps=STEP_SIZE_VALID,
-                                 shuffle = True
+                                 shuffle = True,
+                                workers=0 #avoid OOM error
                               )
 # use_multiprocessing=True,
 # workers=6
@@ -126,8 +127,13 @@ test_generator=test_datagen.flow_from_dataframe(
                         )
 test_generator.reset() #important
 probs = model.predict_generator(generator_wrapper(test_generator),
-                                verbose=1)
-infos = model.evaluate_generator(generator_wrapper(test_generator), verbose=0)
+                                steps = test_generator.n // test_generator.batch_size,
+                                verbose=1,
+                                workers=0
+                                )
+infos = model.evaluate_generator(generator_wrapper(test_generator), verbose=0,
+                                 workers=0
+                                 )
 single_acc, seq_acc = cal_acc(probs,Y_test)
 print('Test loss:', infos[0])
 print('Test info:')
