@@ -317,7 +317,7 @@ def load_detected_data(root_path,results_img_path,verbose = False):
             digits = []
             for info in infos:
                 digits.append(info[0])
-            X.append(np.array(img))
+            X.append(np.array(img,dtype=np.float32))
         Y.append(digits)
     X = np.array(X)
     X = normalize(X)
