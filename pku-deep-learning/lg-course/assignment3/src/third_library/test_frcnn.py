@@ -148,10 +148,11 @@ classes = {}
 
 bbox_threshold = 0.8
 
-visualise = True
+visualise = False
 
-if not os.path.exists('../../data/results_imgs/'):
-    os.mkdir('../../data/results_imgs/')
+root_path = '../../data/30epochs_results_imgs/'
+if not os.path.exists(root_path):
+    os.mkdir(root_path)
 
 for idx, img_name in enumerate(sorted(os.listdir(img_path))):
     if not img_name.lower().endswith(('.bmp', '.jpeg', '.jpg', '.png', '.tif', '.tiff')):
@@ -241,12 +242,13 @@ for idx, img_name in enumerate(sorted(os.listdir(img_path))):
     print(all_dets)
     if len(all_dets) > 0:
         print(region)
-    # cv2.imshow('img', img)
-    # cv2.waitKey(0)
+    if visualise:
+        cv2.imshow('img', img)
+        cv2.waitKey(0)
     # cv2.imwrite('../../data/results_imgs/{}.png'.format(idx), img) #这样存的话，图片idx和原来是不对应的。
     if region == None:
         img = cv2.resize(img,(64,64))
-        cv2.imwrite('../../data/results_imgs/{}'.format(img_name), img)
+        cv2.imwrite(root_path +'{}'.format(img_name), img)
     else:
         real_x1, real_y1, real_x2, real_y2 = region
         real_y1 = max(real_y1, 0)
@@ -255,6 +257,6 @@ for idx, img_name in enumerate(sorted(os.listdir(img_path))):
         real_x2 = max(real_x2, 0)
         cropped_img = img[real_y1:real_y2,real_x1:real_x2]
         cropped_img = cv2.resize(cropped_img, (64, 64))
-        cv2.imwrite('../../data/results_imgs/{}'.format(img_name), cropped_img)
+        cv2.imwrite(root_path +'{}'.format(img_name), cropped_img)
 
 # https: // stackoverflow.com / questions / 15589517 / how - to - crop - an - image - in -opencv - using - python

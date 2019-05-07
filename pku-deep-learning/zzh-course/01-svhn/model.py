@@ -19,7 +19,7 @@ class Model():
         self.weight_init = tf_contrib.layers.variance_scaling_initializer(factor=1.0,
                                 mode='FAN_IN', uniform=False)
         self.bias_init = tf.zeros_initializer()
-        self.reg = lp_regularizer(config.weight_decay,p=2)
+        self.reg = lp_regularizer(config.weight_decay,p=3)
 
     def _conv_layer(self, name, inp, kernel_shape, stride, padding='SAME',is_training=False):
         with tf.variable_scope(name) as scope:

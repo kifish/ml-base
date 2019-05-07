@@ -164,5 +164,5 @@ plt.title('Training and validation loss')
 plt.xlabel('Epochs')
 plt.ylabel('Loss')
 plt.legend()
-plt.savefig('generator-256-128*-Adam-0.01-Training_and_validation_loss.png')
+plt.savefig('generator_256_128*_SGD_0.01_Training_and_validation_loss.png')
 
