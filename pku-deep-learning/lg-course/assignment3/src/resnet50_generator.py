@@ -1,4 +1,4 @@
-from keras.layers import Flatten, Dense, Dropout,Input,Activation,MaxPooling2D
+from keras.layers import Flatten, Dense, Dropout,Input,Activation,MaxPooling2D,AvgPool2D
 from keras.applications import resnet50
 from keras.models import Model
 from keras.layers.normalization import BatchNormalization
@@ -33,8 +33,10 @@ def cal_acc(probs,Y):
     single_digit_acc = single_true_cnt / Y.shape[0] / Y.shape[1]
     seq_acc = multi_true_cnt / Y.shape[0]
     return single_digit_acc,seq_acc
-
-x = MaxPooling2D(pool_size=(4,4))(base_model.output)
+input_layer = Input(shape=(img_height,img_weight,3))
+x = BatchNormalization()(input_layer)
+x = base_model(x)
+x = AvgPool2D(pool_size=(4,4))(x)
 x = Flatten()(x) #2048要比8192好很多
 x = Dense(128,activation=None)(x)
 x = BatchNormalization()(x)
@@ -47,10 +49,10 @@ pred4 = Dense(11,activation='softmax')(x)
 pred5 = Dense(11,activation='softmax')(x)
 
 outputs = [pred1,pred2,pred3,pred4,pred5]
-model = Model(input=base_model.input,output = outputs)
+model = Model(input=input_layer,output = outputs)
 from keras import optimizers
-adam = optimizers.Adam(lr = 0.01)
-model.compile(optimizer=adam, loss='categorical_crossentropy', metrics=['accuracy'])
+sgd = optimizers.SGD(lr = 0.01)
+model.compile(optimizer=sgd, loss='categorical_crossentropy', metrics=['accuracy'])
 model.summary()
 
 from keras_preprocessing.image import ImageDataGenerator
