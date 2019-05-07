@@ -115,7 +115,7 @@ plt.xlabel('Epochs')
 plt.ylabel('Loss')
 plt.legend()
 #plt.show()
-plt.savefig('no_detector_60-256-128*-sgd-0.01-Training and validation loss.png')
+plt.savefig('no_detector_60-256-128*_sgd_0.01_Training_and_validation_loss.png')
 
 # plt.figure(1)
 # plt.plot(epochs, acc, 'bo', label='Training acc')
