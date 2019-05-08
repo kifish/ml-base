@@ -3,6 +3,7 @@ from dataloader import *
 from keras.optimizers import *
 from keras.callbacks import *
 
+
 itokens, otokens = MakeS2SDict('../../dataset/train_eng2chn.txt', dict_file='../../dataset/eng2chn_word.txt')
 Xtrain, Ytrain = MakeS2SData('../../dataset/train_eng2chn.txt', itokens, otokens, h5_file='../../dataset/eng2chn.h5')
 Xvalid, Yvalid = MakeS2SData('../../dataset/val_eng2chn.txt', itokens, otokens, h5_file='../../dataset/eng2chn.valid.h5')

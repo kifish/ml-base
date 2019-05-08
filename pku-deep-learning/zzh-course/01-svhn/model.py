@@ -57,12 +57,16 @@ class Model():
             x = tf.nn.avg_pool(inp, ksize=[1, ksize, ksize, 1], strides=[1, stride, stride, 1],
                                padding=padding, name=name, data_format='NHWC')
         else:
-            with tf.variable_scope(name) as scope:
-                gauss_kernel = tf.get_variable(name='gauss_kernel',initializer=self.gaussian_kernel_init(shape),trainable=False)
-                p = mode
-                x = tf.pow(inp,p)
-                x = tf.nn.conv2d(x,gauss_kernel,strides=[1,stride,stride,1],padding=padding,name = name,data_format='NHWC')
-                x = tf.pow(x,1/p)
+            if mode < 10:
+                with tf.variable_scope(name) as scope:
+                    gauss_kernel = tf.get_variable(name='gauss_kernel',initializer=self.gaussian_kernel_init(shape),trainable=False)
+                    p = mode
+                    x = tf.pow(inp,p)
+                    x = tf.nn.conv2d(x,gauss_kernel,strides=[1,stride,stride,1],padding=padding,name = name,data_format='NHWC')
+                    x = tf.pow(x,1/p)
+            else:
+                with tf.variable_scope(name) as scope:
+                    x = tf.nn.max_pool(inp,ksize=[1,shape[0],shape[0],1],strides=[1,stride,stride,1],padding=padding,name = name,data_format='NHWC')
         return x
 
     def _fc_layer(self, name, inp, units, dropout=0.5):
@@ -95,28 +99,28 @@ class Model():
         x = self._conv_layer(name='conv1', inp=data,
                              kernel_shape=[3, 3, config.nr_channel, 16], stride=1,
                              is_training=is_training) # Nx32x32x16
-        x = self._pool_layer(name='pool1', inp=x, ksize=None, padding='SAME',shape= [3,3,16,16],stride=2, mode=2) # Nx16x16x16
+        x = self._pool_layer(name='pool1', inp=x, ksize=None, padding='SAME',shape= [3,3,16,16],stride=2, mode=100) # Nx16x16x16
 
         # conv2
         x = self._conv_layer(name='conv21', inp=x, kernel_shape=[3, 3, 16, 32],
                              stride=1, is_training=is_training)
         x = self._conv_layer(name='conv22', inp=x, kernel_shape=[3, 3, 32, 32],
                              stride=1, is_training=is_training) # Nx16x16x32
-        x = self._pool_layer(name='pool2', inp=x, ksize=None, padding='SAME',shape= [4,4,32,32],stride=2, mode=2) # Nx8x8x32
+        x = self._pool_layer(name='pool2', inp=x, ksize=None, padding='SAME',shape= [4,4,32,32],stride=2, mode=100) # Nx8x8x32
 
         # conv3
         x = self._conv_layer(name='conv31', inp=x, kernel_shape=[3, 3, 32, 64],
                              stride=1, is_training=is_training)
         x = self._conv_layer(name='conv32', inp=x, kernel_shape=[3, 3, 64, 64],
                              stride=1, is_training=is_training) # Nx8x8x64
-        x = self._pool_layer(name='pool3', inp=x, ksize=None, padding = 'SAME',shape= [5,5,64,64],stride=2, mode=2) # Nx4x4x64
+        x = self._pool_layer(name='pool3', inp=x, ksize=None, padding = 'SAME',shape= [5,5,64,64],stride=2, mode=100) # Nx4x4x64
 
         # conv4
         x = self._conv_layer(name='conv41', inp=x, kernel_shape=[3, 3, 64, 128],
                              stride=1, is_training=is_training)
         x = self._conv_layer(name='conv42', inp=x, kernel_shape=[3, 3, 128, 128],
                              stride=1, is_training=is_training) # Nx4x4x128
-        x = self._pool_layer(name='pool4', inp=x, ksize=None, padding='VALID', shape= [4, 4, 128, 128], stride=1, mode=2) # Nx1x1x128
+        x = self._pool_layer(name='pool4', inp=x, ksize=None, padding='VALID', shape= [4, 4, 128, 128], stride=1, mode=100) # Nx1x1x128
 
         # fc1
         logits = self._fc_layer(name='fc1', inp=x, units=config.nr_class, dropout=0)

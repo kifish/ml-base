@@ -65,6 +65,9 @@ else:
 
 #最终val_acc 是0.37左右。
 #model一起训练的话，english to de 可以正常训练；但english to chinese (分字) loss会爆炸；可以逐层训练。
+#如果分词的话，模型直接训练loss也不会爆炸。
+
+
 
 
 
