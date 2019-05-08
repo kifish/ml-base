@@ -21,17 +21,19 @@ class Model():
         self.bias_init = tf.zeros_initializer()
         self.reg = tf_contrib.layers.l2_regularizer(config.weight_decay)
 
-    def gaussian_kernel_init(self,edge_len,mean=0.,std=1.0):
+    def gaussian_kernel_init(shape, mean=0., std=1.0):
+        edge_len = shape[0]
         d = tf.distributions.Normal(mean, std)
         if edge_len % 2 == 1:
             vals = d.prob(tf.range(start=-(edge_len // 2), limit=(edge_len // 2) + 1, delta=1, dtype=tf.float32))
         else:
             vals = d.prob(tf.range(start=-(edge_len - 1), limit=(edge_len - 1) + 1, delta=2, dtype=tf.float32))
-        gauss_kernel = tf.einsum('i,j->ij',
-                                 vals,
-                                 vals)
+        gauss_kernel = tf.einsum('i,j->ij', vals, vals)
         gauss_kernel = gauss_kernel / tf.reduce_sum(gauss_kernel)
-        return gauss_kernel[:, :, tf.newaxis, tf.newaxis]
+        gauss_kernel = tf.stack([gauss_kernel] * shape[2])
+        gauss_kernel = tf.stack([gauss_kernel] * shape[3])
+        gauss_kernel = tf.transpose(gauss_kernel, perm=[3, 2, 0, 1])
+        return gauss_kernel
 
     def _conv_layer(self, name, inp, kernel_shape, stride, padding='SAME',is_training=False):
         with tf.variable_scope(name) as scope:
@@ -56,7 +58,7 @@ class Model():
                                padding=padding, name=name, data_format='NHWC')
         else:
             with tf.variable_scope(name) as scope:
-                gauss_kernel = tf.get_variable(name='gauss_kernel',initializer=self.gaussian_kernel_init(shape[0]),trainable=False)
+                gauss_kernel = tf.get_variable(name='gauss_kernel',initializer=self.gaussian_kernel_init(shape),trainable=False)
                 p = mode
                 x = tf.pow(inp,p)
                 x = tf.nn.conv2d(x,gauss_kernel,strides=[1,stride,stride,1],padding=padding,name = name,data_format='NHWC')
