@@ -45,7 +45,9 @@ pred5 = Dense(11,activation='softmax')(x)
 
 outputs = [pred1,pred2,pred3,pred4,pred5]
 model = Model(input=base_model.input,output = outputs)
-model.compile(optimizer='Adam', loss='categorical_crossentropy', metrics=['accuracy'])
+from keras import optimizers
+sgd = optimizers.SGD(lr = 0.01)
+model.compile(optimizer=sgd, loss='categorical_crossentropy', metrics=['accuracy'])
 model.summary()
 
 with open('../data/train_rgb.pkl', 'rb') as f:
