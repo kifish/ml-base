@@ -1,5 +1,5 @@
 import numpy as np
-
+import jieba
 data = []
 with open('../dataset/raw/cmn.txt','r',encoding='utf8') as f:
     for line in f.readlines():
@@ -45,12 +45,15 @@ def save_data(data,save_path):
             r += ' '
         r = r[:-1]
         return r
+    def cut_han(s):
+        seg_list = jieba.cut(s)
+        return ' '.join(seg_list)
     source_data = []
     target_data = []
     for sample in data:
         source,target = sample.split('\t')
         source = source[:-1] + ' ' + source[-1]
-        target = split_han(target)
+        target = cut_han(target)
         source_data.append(source)
         target_data.append(target)
     with open(save_path,'w',encoding='utf8') as f:
@@ -59,13 +62,14 @@ def save_data(data,save_path):
 
 
 
-save_path = '../dataset/train_eng2chn.txt'
+#先把中文分词的效果要好于分字的效果
+save_path = '../dataset/train_eng2chn_w.txt'
 save_data(train_data,save_path)
 
-save_path = '../dataset/val_eng2chn.txt'
+save_path = '../dataset/val_eng2chn_w.txt'
 save_data(val_data,save_path)
 
-save_path = '../dataset/test_eng2chn.txt'
+save_path = '../dataset/test_eng2chn_w.txt'
 save_data(test_data,save_path)
 
 
