@@ -1,4 +1,4 @@
-from keras.layers import Flatten, Dense, Dropout,Input
+from keras.layers import Flatten, Dense, Dropout,Input,AvgPool2D,Activation
 from keras.applications import resnet50
 from keras.models import Model
 from keras.layers.normalization import BatchNormalization
@@ -30,10 +30,13 @@ def cal_acc(probs,Y):
     seq_acc = multi_true_cnt / Y.shape[0]
     return single_digit_acc,seq_acc
 
-x = Flatten()(base_model.output)
-x = Dense(128,activation='relu')(x)
-x = Dropout(0.5)(x)
+x = AvgPool2D(pool_size=(2,2))(base_model.output)
+x = Flatten()(x)
+x = Dense(128,activation=None)(x)
 x = BatchNormalization()(x)
+x = Activation('relu')(x)
+x = Dropout(0.5)(x)
+
 pred1 = Dense(11,activation='softmax')(x)
 pred2 = Dense(11,activation='softmax')(x)
 pred3 = Dense(11,activation='softmax')(x)
@@ -62,7 +65,7 @@ Y_train = [
 
 history = model.fit(x = X_train,y = Y_train,
                                  batch_size = 256,
-                                 epochs= 3,
+                                 epochs= 30,
                                  verbose=1,
                                  validation_split=0.05,
                                  shuffle = True
