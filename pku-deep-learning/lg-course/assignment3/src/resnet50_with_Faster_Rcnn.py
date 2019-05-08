@@ -79,7 +79,7 @@ del X_train,Y_train
 
 
 root_path = '../data/test/'
-results_img_path = '../data/results_imgs/'
+results_img_path = '../data/30epochs_results_imgs/'
 X_test,Y_test = load_detected_data(root_path,results_img_path)
 print('X_test:', X_test.shape)
 print('Y_test:', Y_test.shape)
