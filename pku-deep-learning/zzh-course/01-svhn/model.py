@@ -48,7 +48,7 @@ class Model():
             x = tf.nn.relu(x)
         return x
 
-    def _pool_layer(self, name, inp, ksize, stride, shape = None,padding='SAME', mode='MAX'):
+    def _pool_layer(self, name, inp, ksize, stride, shape = None,padding='SAME', mode='MAX',version = 'naive'):
         assert (mode in ['MAX', 'AVG'] or isinstance(mode,int)), 'the mode of pool must be MAX or AVG or Interger'
         if mode == 'MAX':
             x = tf.nn.max_pool(inp, ksize=[1, ksize, ksize, 1], strides=[1, stride, stride, 1],
@@ -57,13 +57,13 @@ class Model():
             x = tf.nn.avg_pool(inp, ksize=[1, ksize, ksize, 1], strides=[1, stride, stride, 1],
                                padding=padding, name=name, data_format='NHWC')
         else:
-            if mode < 10:
+            if mode < 101:
                 with tf.variable_scope(name) as scope:
                     gauss_kernel = tf.get_variable(name='gauss_kernel',initializer=self.gaussian_kernel_init(shape),trainable=False)
                     p = mode
-                    x = tf.pow(inp,p)
+                    x = tf.clip_by_value(tf.pow(inp,p),tf.float32.min + 1.0,tf.float32.max-1.0)
                     x = tf.nn.conv2d(x,gauss_kernel,strides=[1,stride,stride,1],padding=padding,name = name,data_format='NHWC')
-                    x = tf.pow(x,1/p)
+                    x = tf.clip_by_value(tf.pow(x,1/p),tf.float32.min + 1.0,tf.float32.max-1.0)
             else:
                 with tf.variable_scope(name) as scope:
                     x = tf.nn.max_pool(inp,ksize=[1,shape[0],shape[0],1],strides=[1,stride,stride,1],padding=padding,name = name,data_format='NHWC')
