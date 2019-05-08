@@ -21,7 +21,7 @@ class Model():
         self.bias_init = tf.zeros_initializer()
         self.reg = tf_contrib.layers.l2_regularizer(config.weight_decay)
 
-    def gaussian_kernel_init(shape, mean=0., std=1.0):
+    def gaussian_kernel_init(self,shape, mean=0., std=1.0):
         edge_len = shape[0]
         d = tf.distributions.Normal(mean, std)
         if edge_len % 2 == 1:
