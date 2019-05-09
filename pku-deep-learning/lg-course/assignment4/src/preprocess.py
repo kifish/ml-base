@@ -58,19 +58,25 @@ def save_data(data,save_path):
         target_data.append(target)
     with open(save_path,'w',encoding='utf8') as f:
         for idx,s in enumerate(source_data):
-            f.write(s + '\t' + target_data[idx] + '\n')
+            f.write(target_data[idx] + '\t' + s + '\n') # 作业要求中翻英
 
 
 
 #先把中文分词的效果要好于分字的效果
-save_path = '../dataset/train_eng2chn_w.txt'
+save_path = '../dataset/train_chn2eng_w.txt'
 save_data(train_data,save_path)
 
-save_path = '../dataset/val_eng2chn_w.txt'
+save_path = '../dataset/val_chn2eng_w.txt'
 save_data(val_data,save_path)
 
-save_path = '../dataset/test_eng2chn_w.txt'
+save_path = '../dataset/test_chn2eng_w.txt'
 save_data(test_data,save_path)
+
+with open('../dataset/ref.txt','w',encoding='utf8') as f:
+    for sample in test_data:
+        ref = sample.split('\t')[0]
+        f.write(ref + '\n')
+
 
 
 
