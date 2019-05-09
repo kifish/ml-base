@@ -21,31 +21,15 @@ if not os.path.exists('../../tmp'):
 	os.mkdir('../../tmp')
 save_path = '../../tmp/chn2eng.model.h5'
 lr_scheduler = LRSchedulerPerStep(dim_model, 4000)
-model_saver = ModelCheckpoint(save_path, save_best_only=True, save_weights_only=True)
+model_saver = ModelCheckpoint(save_path, save_best_only=True, save_weights_only=False)
 
 s2s.compile(Adam(0.0001, 0.9, 0.98, epsilon=1e-9))
+s2s.model.summary()
+
 try:
 	s2s.model.load_weights(save_path)
 except:
 	print('\n\nnew model')
-
-if 'eval' in sys.argv:
-	print(s2s.decode_sequence_readout('A black dog eats food .'.split(), delimiter=' '))
-	print(s2s.decode_sequence('A black dog eats food .'.split(), delimiter=' '))
-	print(s2s.decode_sequence_fast('A black dog eats food .'.split(), delimiter=' '))
-	while True:
-		quest = input('> ')
-		print(s2s.decode_sequence_fast(quest.split(), delimiter=' '))
-		rets = s2s.beam_search(quest.split(), delimiter=' ')
-		for x, y in rets:
-			print(x, y)
-elif 'test' in sys.argv:
-	rets = s2s.decode_sequence_greedy(Xvalid[:256])
-	sents = s2s.generate_sentence(rets, delimiter=' ')
-	for x in sents:
-		print(x)
-else:
-	s2s.model.summary()
 	s2s.model.fit([Xtrain, Ytrain], None, batch_size=64, epochs=30, \
-				validation_data=([Xvalid, Yvalid], None), \
-				callbacks=[lr_scheduler, model_saver])
+					validation_data=([Xvalid, Yvalid], None), \
+					callbacks=[lr_scheduler, model_saver])
