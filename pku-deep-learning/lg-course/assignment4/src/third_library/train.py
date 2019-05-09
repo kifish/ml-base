@@ -16,9 +16,9 @@ print('seq 2 words:', otokens.num())
 print('train shapes:', Xtrain.shape, Ytrain.shape)
 print('valid shapes:', Xvalid.shape, Yvalid.shape)
 
-dim_model = 256
-s2s = Transformer(itokens, otokens, len_limit=70, dim_model=dim_model, d_inner_hid=512, \
-                  n_head=8, layers=2, dropout=0.1)
+dim_model = 512
+s2s = Transformer(itokens, otokens, len_limit=70, dim_model=dim_model, d_inner_hid=2048, \
+                  n_head=8, layers=6, dropout=0.1)
 
 if not os.path.exists('../../tmp'):
     os.mkdir('../../tmp')
@@ -34,7 +34,7 @@ if continued:
     s2s.model.load_weights(save_path)
 else:
     print('\n\nnew model')
-    history = s2s.model.fit([Xtrain, Ytrain], None, batch_size=256, epochs=60, \
+    history = s2s.model.fit([Xtrain, Ytrain], None, batch_size=256, epochs=30, \
                   validation_data=([Xvalid, Yvalid], None), \
                   callbacks=[lr_scheduler, model_saver])
     loss = history.history['loss']
