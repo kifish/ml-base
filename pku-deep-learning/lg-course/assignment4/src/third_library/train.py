@@ -3,6 +3,7 @@ from dataloader import *
 from keras.optimizers import *
 from keras.callbacks import *
 from transformer import Transformer, LRSchedulerPerStep
+import matplotlib.pyplot as plt
 
 itokens, otokens = MakeS2SDict('../../dataset/train_chn2eng_w.txt', dict_file='../../dataset/chn2eng_w_word.txt')
 Xtrain, Ytrain = MakeS2SData('../../dataset/train_chn2eng_w.txt', itokens, otokens,
@@ -23,7 +24,7 @@ if not os.path.exists('../../tmp'):
     os.mkdir('../../tmp')
 save_path = '../../tmp/chn2eng.model.h5'
 lr_scheduler = LRSchedulerPerStep(dim_model, 4000)
-model_saver = ModelCheckpoint(save_path, save_best_only=True, save_weights_only=False)
+model_saver = ModelCheckpoint(save_path, save_best_only=True, save_weights_only=True) #save_weights_only设置为False会报错： TypeError: can't pickle _thread.RLock objects
 
 s2s.compile(Adam(0.001, 0.9, 0.98, epsilon=1e-9))
 s2s.model.summary()
@@ -33,6 +34,20 @@ if continued:
     s2s.model.load_weights(save_path)
 else:
     print('\n\nnew model')
-    s2s.model.fit([Xtrain, Ytrain], None, batch_size=64, epochs=30, \
+    history = s2s.model.fit([Xtrain, Ytrain], None, batch_size=256, epochs=60, \
                   validation_data=([Xvalid, Yvalid], None), \
                   callbacks=[lr_scheduler, model_saver])
+    loss = history.history['loss']
+    val_loss = history.history['val_loss']
+    epochs = range(1, len(loss) + 1)
+    plt.figure(0)
+    plt.plot(epochs, loss, 'b', label='Training loss')
+    plt.plot(epochs, val_loss, 'g', label='Validation loss')
+    plt.title('Training and validation loss')
+    plt.xlabel('Epochs')
+    plt.ylabel('Loss')
+    plt.legend()
+    plt.savefig('transformer_Training_and_validation_loss.png')
+
+
+

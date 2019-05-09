@@ -1,0 +1,2 @@
+* 名称: 平时作业（4）机器翻译训练  
+* 说明 请从如下的数据集中，下载中英文翻译训练数据（Chinese (Mandarin) - English），并利用课上学习的知识构造一个“中英文翻译机”。 http://www.manythings.org/anki/  提交要求：  撰写一个PPT，汇报如下信息： （1）所设计的网络的结构和超参数信息； （2）网络的训练方法和优化方法； （3）体现训练过程的“训练曲线”； （4）汇报模型在测试数据集（或CV集）上的如下指标：  BLEU，ROUGE，METEOR  指标参考链接：  https://medium.com/explorations-in-language-and-learning/metrics-for-nlg-evaluation-c89b6a781054  
