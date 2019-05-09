@@ -4,9 +4,9 @@ from keras.optimizers import *
 from keras.callbacks import *
 from transformer import Transformer, LRSchedulerPerStep
 
-itokens, otokens = MakeS2SDict('../../dataset/train_chn2eng.txt', dict_file='../../dataset/chn2eng_word.txt')
-Xtrain, Ytrain = MakeS2SData('../../dataset/train_chn2eng.txt', itokens, otokens, h5_file='../../dataset/chn2eng.h5')
-Xvalid, Yvalid = MakeS2SData('../../dataset/val_chn2eng.txt', itokens, otokens, h5_file='../../dataset/chn2eng.valid.h5')
+itokens, otokens = MakeS2SDict('../../dataset/train_chn2eng_w.txt', dict_file='../../dataset/chn2eng_w_word.txt')
+Xtrain, Ytrain = MakeS2SData('../../dataset/train_chn2eng_w.txt', itokens, otokens, h5_file='../../dataset/chn2eng_w.h5')
+Xvalid, Yvalid = MakeS2SData('../../dataset/val_chn2eng_w.txt', itokens, otokens, h5_file='../../dataset/chn2eng_w.valid.h5')
 
 print('seq 1 words:', itokens.num())
 print('seq 2 words:', otokens.num())
@@ -49,4 +49,3 @@ else:
 	s2s.model.fit([Xtrain, Ytrain], None, batch_size=64, epochs=30, \
 				validation_data=([Xvalid, Yvalid], None), \
 				callbacks=[lr_scheduler, model_saver])
-	# val_accu @ 30 epoch: 0.7045
