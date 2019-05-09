@@ -12,7 +12,7 @@ X_test, Y_test = MakeS2SData('../../dataset/test_chn2eng_w.txt', itokens, otoken
 dim_model = 256
 s2s = Transformer(itokens, otokens, len_limit=70, dim_model=dim_model, d_inner_hid=512, \
 				   n_head=8, layers=2, dropout=0.1)
-s2s.compile(Adam(0.0001, 0.9, 0.98, epsilon=1e-9))
+s2s.compile(Adam(0.001, 0.9, 0.98, epsilon=1e-9))
 save_path = '../../tmp/chn2eng.model.h5'
 s2s.model.load_weights(save_path)
 
