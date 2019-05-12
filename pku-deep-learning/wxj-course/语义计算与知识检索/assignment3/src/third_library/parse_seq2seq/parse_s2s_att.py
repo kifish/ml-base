@@ -347,7 +347,8 @@ def train():
         
         # save model at the end of last training epoch
         if epoch_count > FLAGS.max_epoch or epoch_count % 3 == 0:
-            print("Max epoch reached!")
+            if epoch_count > FLAGS.max_epoch:
+              print("Max epoch reached!")
             # Save checkpoint 
             checkpoint_path = os.path.join(FLAGS.train_dir, "parse.ckpt")
             model.saver.save(sess, checkpoint_path, global_step=model.global_step)
@@ -384,7 +385,7 @@ def test_accuracy(from_data,to_data):
         val_acc = 0
         comm_dict = init_comm_dict(to_vocab)
         rev_to_vocab_dict = reverseDict(to_vocab)
-        
+        print(comm_dict) #debug
         for data in test_data:
 
             from_token_ids = data[0]

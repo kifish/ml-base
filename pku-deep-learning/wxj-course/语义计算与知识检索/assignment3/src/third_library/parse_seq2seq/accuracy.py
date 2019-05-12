@@ -80,7 +80,7 @@ def sort_args(ans,vocab,comm_dict):
       
       for child in node:
         recurse(child)
-        
+      print('node[0]':,node[0]) # for debug  
       if node[0] in comm_dict:
         node[1:] = sorted(node[1:], key=lambda x: str(x))
         

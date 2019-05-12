@@ -19,6 +19,7 @@ __pycache__/
 *.hdf5
 *.h5 
 
+/pku-deep-learning/wxj-course/语义计算与知识检索/assignment3/checkpoint/
 /pku-deep-learning/wxj-course/语义计算与知识检索/assignment3/data/
 /pku-deep-learning/wxj-course/语义计算与知识检索/assignment3/src/third_library/checkpoint/
 
