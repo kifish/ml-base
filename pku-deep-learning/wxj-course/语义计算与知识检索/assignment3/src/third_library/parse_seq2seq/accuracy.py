@@ -80,15 +80,15 @@ def sort_args(ans,vocab,comm_dict):
       
       for child in node:
         recurse(child)
-      print('node[0]:',node[0]) # for debug  
+    #   print('node[0]:',node[0]) # for debug  
     #   node[0]: [7, 6, [9, [22, [18, 6, 3], [18, 6, 3]], [283, 3, 6]]]
     # 有个数据是这样的。
-    try:
-      if node[0] in comm_dict:
-        node[1:] = sorted(node[1:], key=lambda x: str(x))
-    except:
-        print('some wierd data...')
-        print(node[0])
+      try:
+        if node[0] in comm_dict:
+          node[1:] = sorted(node[1:], key=lambda x: str(x))
+      except:
+          print('some wierd data...')
+          print(node[0])
         
     recurse(lisp_tree)
         
