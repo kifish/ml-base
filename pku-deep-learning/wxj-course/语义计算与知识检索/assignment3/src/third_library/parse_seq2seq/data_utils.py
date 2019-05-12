@@ -209,9 +209,9 @@ def splitToFrom(data_dir,inputFile,out_key):
     count = 0
     fromFile = out_key+"_q.txt"
     toFile = out_key+"_f.txt"
-    fr = open(os.path.join(data_dir,inputFile),"r")
-    fw_from = open(os.path.join(data_dir,fromFile),"w")
-    fw_to = open(os.path.join(data_dir,toFile),"w")
+    fr = open(os.path.join(data_dir,inputFile),"r",encoding='utf8')
+    fw_from = open(os.path.join(data_dir,fromFile),"w",encoding='utf8')
+    fw_to = open(os.path.join(data_dir, toFile), "w", encoding='utf8')
     count = 0
     for line in fr:
         line = line.strip().split("\t")
@@ -282,7 +282,7 @@ def prepare_data(data_dir, from_train_path, to_train_path, from_dev_path, to_dev
 def tokenize_dataset(from_data,to_data,from_vocab,to_vocab):
 
     dataset = []
-    f_from = open(from_data,"r")
+    f_from = open(from_data, "r", encoding='utf8')
     for line in f_from:
         line = line.strip()
         if len(line)<1:
@@ -293,7 +293,7 @@ def tokenize_dataset(from_data,to_data,from_vocab,to_vocab):
        
     f_from.close()
     
-    f_to = open(to_data,"r")
+    f_to = open(to_data, "r", encoding='utf8')
     idx = -1
     for line in f_to:
         line = line.strip()

@@ -346,13 +346,14 @@ def train():
                 print("  epoch %d eval: bucket %d perplexity %.2f loss %2.5f" % (epoch_count-1,bucket_id, eval_ppx, eval_loss))
         
         # save model at the end of last training epoch
-        if epoch_count > FLAGS.max_epoch:
+        if epoch_count > FLAGS.max_epoch or epoch_count % 3 == 0:
             print("Max epoch reached!")
             # Save checkpoint 
             checkpoint_path = os.path.join(FLAGS.train_dir, "parse.ckpt")
             model.saver.save(sess, checkpoint_path, global_step=model.global_step)
             print("Model saved.")
-            break
+            if epoch_count > FLAGS.max_epoch:
+              break
             
     print("Training complete!")
     return
