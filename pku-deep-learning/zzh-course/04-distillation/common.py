@@ -16,7 +16,7 @@ class Config:
     nr_channel = 3
     image_shape = (32, 32)
     nr_class = 10
-    nr_epoch = 60
+    nr_epoch = 30
     weight_decay = 1e-10
     show_interval = 100
     snapshot_interval = 2
