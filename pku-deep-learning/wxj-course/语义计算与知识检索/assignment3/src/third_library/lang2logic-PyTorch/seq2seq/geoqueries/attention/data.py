@@ -10,9 +10,13 @@ import numpy as np
 def process_train_data(opt):
     time_start = time.time()
     word_manager = SymbolsManager(True)
-    word_manager.init_from_file("{}/vocab.q.txt".format(opt.data_dir), opt.min_freq, opt.max_vocab_size)
+    word_manager.init_from_file(
+        "{}/train_q.txt".format(opt.data_dir), opt.min_freq, opt.max_vocab_size)
+    #word_manager.init_from_file("{}/vocab.q.txt".format(opt.data_dir), opt.min_freq, opt.max_vocab_size)
     form_manager = SymbolsManager(True)
-    form_manager.init_from_file("{}/vocab.f.txt".format(opt.data_dir), 0, opt.max_vocab_size)
+    form_manager.init_from_file(
+        "{}/train_f.txt".format(opt.data_dir), 0, opt.max_vocab_size)
+    #form_manager.init_from_file("{}/vocab.f.txt".format(opt.data_dir), 0, opt.max_vocab_size)
     print(word_manager.vocab_size)
     print(form_manager.vocab_size)
     data = []
