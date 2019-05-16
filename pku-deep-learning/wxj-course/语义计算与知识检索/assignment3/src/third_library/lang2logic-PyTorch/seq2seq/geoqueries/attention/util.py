@@ -73,7 +73,11 @@ class MinibatchLoader():
         p = 0
         while p + opt.batch_size <= len(data):
             # build encoder matrix
-            max_len = len(data[p + opt.batch_size - 1][0])
+            max_len = -1
+            for i in range(opt.batch_size):
+                seq_len = len(data[p + i][0])
+                max_len = max(max_len,seq_len)
+                
             m_text = torch.zeros((opt.batch_size, max_len + 2), dtype=torch.long) #<s>  </s>
             if using_gpu:
                 m_text = m_text.cuda()
