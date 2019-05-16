@@ -37,7 +37,7 @@ def serialize_data(opt):
     data = []
     managers = pkl.load( open("{}/map.pkl".format(opt.data_dir), "rb" ) )
     word_manager, form_manager = managers
-    with open("{}/{}.txt".format(opt.data_dir, opt.test), "r") as f:
+    with open("{}/{}".format(opt.data_dir, opt.test), "r") as f:
         for line in f:
             l_list = line.split("\t")
             w_list = word_manager.get_symbol_idx_for_list(l_list[0].strip().split(' '))
