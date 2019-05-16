@@ -137,7 +137,7 @@ def create_model(session, forward_only, use_dropout):
       use_dropout=use_dropout,
       dtype=dtype)
   ckpt = tf.train.get_checkpoint_state(FLAGS.train_dir)
-  if FLAGS.decode or FLAGS.test:
+  if FLAGS.decode or FLAGS.decode_all or FLAGS.test:
     if ckpt and tf.train.checkpoint_exists(ckpt.model_checkpoint_path):
         print("Reading model parameters from %s" % ckpt.model_checkpoint_path)
         model.saver.restore(session, ckpt.model_checkpoint_path)
@@ -504,6 +504,7 @@ def decode_all():
       with open(save_path,'w',encoding='utf8') as f2:
         for line in f1.readlines():
           sentence = line.strip().split('\t')[0]
+          #print(sentence) # for debug
           # Get token-ids for the input sentence.
           token_ids = data_utils.sentence_to_token_ids(sentence, from_vocab)
           # Which bucket does it belong to?
