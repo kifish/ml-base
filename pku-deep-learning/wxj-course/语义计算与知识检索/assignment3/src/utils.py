@@ -1,5 +1,6 @@
 import os
 import re 
+import argparse
 from nltk.translate.bleu_score import corpus_bleu
 def process_data():
     pattern1 = r'<question id=.*>\t(.*)\n'
@@ -45,10 +46,14 @@ def cal_acc():
             ref = line.strip().split('\t')[1].split(' ')
             ref_list.append(ref)
     pred_list = []
-    with open('../data/pred_pytorch_3_epoch.txt', 'r', encoding='utf8') as f:
+    cnt = 0
+    with open(args.pred_path, 'r', encoding='utf8') as f:
         for line in f.readlines():
             pred = line.strip().split(' ')
             pred_list.append(pred)
+            cnt += 1
+            if cnt == 9000: # skip the acc value
+                break
     token_cnt = 0
     true_cnt = 0
     true_line_cnt = 0
@@ -101,6 +106,10 @@ def gen_vocab():
 
 
 if __name__ == '__main__':
+    main_arg_parser = argparse.ArgumentParser(description="parser")
+    main_arg_parser.add_argument('-pred_path', type=str, default='../data/pred.txt', help='pred.txt')
+    # parse input params
+    args = main_arg_parser.parse_args()
     #process_data()
     #gen_vocab()
     cal_acc()
