@@ -102,4 +102,6 @@ def gen_vocab():
 
 if __name__ == '__main__':
     #process_data()
-    gen_vocab()
+    #gen_vocab()
+    cal_acc()
+    
