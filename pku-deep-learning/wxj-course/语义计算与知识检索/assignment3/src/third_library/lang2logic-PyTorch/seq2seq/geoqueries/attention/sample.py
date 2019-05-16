@@ -60,7 +60,7 @@ if __name__ == "__main__":
     main_arg_parser = argparse.ArgumentParser(description="parser")
     main_arg_parser.add_argument('-gpuid', type=int, default=0, help='which gpu to use. -1 = use CPU')
     main_arg_parser.add_argument('-temperature', type=int, default=1, help='temperature of sampling')
-    main_arg_parser.add_argument('-sample', type=int, default=0, help='0 to use max at each timestep (-beam_size=1), 1 to sample at each timestep, 2 to beam search')
+    main_arg_parser.add_argument('-sample', type=int, default=0, help='0 to use max at each timestep (-beam_size=1), 1 to sample at each timestep, 2 to beam search') #原repo还未实现。
     main_arg_parser.add_argument('-beam_size', type=int, default=20, help='beam size')
     main_arg_parser.add_argument('-display', type=int, default=1, help='whether display on console')
     main_arg_parser.add_argument('-data_dir', type=str, default='../data/', help='data path')
@@ -100,7 +100,7 @@ if __name__ == "__main__":
             x = data[i]
             reference = x[1]
             candidate = do_generate(encoder, decoder, attention_decoder, x[0], word_manager, form_manager, args, using_gpu)
-            print(candidate)
+            # print(candidate)
             candidate = [int(c) for c in candidate]
 
 
