@@ -94,7 +94,7 @@ def eval_training(opt, train_loader, encoder, decoder, attention_decoder, encode
     attention_decoder_optimizer.zero_grad()
     enc_batch, enc_len_batch, dec_batch = train_loader.random_batch()
     # do not predict after <E>
-    print(enc_batch.size())
+    #print(enc_batch.size())
     enc_max_len = enc_batch.size(1)
     # because you need to compare with the next token!!
     dec_max_len = dec_batch.size(1) -1
@@ -254,7 +254,7 @@ if __name__ == "__main__":
     main_arg_parser.add_argument('-num_layers', type=int, default=1, help='number of layers in the LSTM')
     main_arg_parser.add_argument('-dropout',type=float, default=0.5,help='dropout for regularization, used after each RNN hidden layer. 0 = no dropout')
     main_arg_parser.add_argument('-dropoutrec',type=int,default=0,help='dropout for regularization, used after each c_i. 0 = no dropout')
-    main_arg_parser.add_argument('-enc_seq_length',type=int, default=50,help='number of timesteps to unroll for') #改大一点
+    main_arg_parser.add_argument('-enc_seq_length',type=int, default=70,help='number of timesteps to unroll for') #改大一点
     main_arg_parser.add_argument('-dec_seq_length',type=int, default=100,help='number of timesteps to unroll for')
     main_arg_parser.add_argument('-batch_size',type=int, default=20,help='number of sequences to train on in parallel')
     main_arg_parser.add_argument('-max_epochs',type=int, default=90,help='number of full passes through the training data')
