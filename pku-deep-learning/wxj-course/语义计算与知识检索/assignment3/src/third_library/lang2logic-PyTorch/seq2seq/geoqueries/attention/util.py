@@ -63,7 +63,7 @@ class SymbolsManager():
 class MinibatchLoader():
     def __init__(self, opt, mode, using_gpu):
         data = pkl.load( open("{}/{}.pkl".format(opt.data_dir, mode), "rb" ) )
-        if len(data) % opt.batch_size != 0:
+        if len(data) % opt.batch_size != 0: #将样本数凑成可以整除batch_size
             n = len(data)
             for i in range(len(data)%opt.batch_size):
                 data.insert(n-i-1, data[n-i-1])
@@ -74,7 +74,7 @@ class MinibatchLoader():
         while p + opt.batch_size <= len(data):
             # build encoder matrix
             max_len = len(data[p + opt.batch_size - 1][0])
-            m_text = torch.zeros((opt.batch_size, max_len + 2), dtype=torch.long)
+            m_text = torch.zeros((opt.batch_size, max_len + 2), dtype=torch.long) #<s>  </s>
             if using_gpu:
                 m_text = m_text.cuda()
             enc_len_list = []
@@ -85,7 +85,14 @@ class MinibatchLoader():
                 # reversed order
                 for j in range(len(w_list)):
                     #print(max_len+2)
-                    m_text[i][j+1] = w_list[len(w_list) - j -1]
+                    try:
+                        m_text[i][j+1] = w_list[len(w_list) - j -1]
+                    except:
+                        print(i)
+                        print(j)
+                        print(w_list)
+                        print(len(w_list))
+                        raise ValueError
                     #m_text[i][j+1] = w_list[j]
                 # -- add <E> (for encoder, we need dummy <E> at the end)
                 for j in range(len(w_list)+1, max_len+2):
