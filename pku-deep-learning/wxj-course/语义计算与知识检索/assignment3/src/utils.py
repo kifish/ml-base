@@ -45,7 +45,7 @@ def cal_acc():
             ref = line.strip().split('\t')[1].split(' ')
             ref_list.append(ref)
     pred_list = []
-    with open('../data/pred.txt','r',encoding='utf8') as f:
+    with open('../data/pred_pytorch_3_epoch.txt', 'r', encoding='utf8') as f:
         for line in f.readlines():
             pred = line.strip().split(' ')
             pred_list.append(pred)
@@ -104,4 +104,4 @@ if __name__ == '__main__':
     #process_data()
     #gen_vocab()
     cal_acc()
-    
+
