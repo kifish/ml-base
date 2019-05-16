@@ -94,6 +94,7 @@ def eval_training(opt, train_loader, encoder, decoder, attention_decoder, encode
     attention_decoder_optimizer.zero_grad()
     enc_batch, enc_len_batch, dec_batch = train_loader.random_batch()
     # do not predict after <E>
+    print(enc_batch.size())
     enc_max_len = enc_batch.size(1)
     # because you need to compare with the next token!!
     dec_max_len = dec_batch.size(1) -1
