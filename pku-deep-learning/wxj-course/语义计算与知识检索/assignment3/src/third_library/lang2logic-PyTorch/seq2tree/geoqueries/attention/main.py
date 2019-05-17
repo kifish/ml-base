@@ -410,7 +410,7 @@ if __name__ == "__main__":
     main_arg_parser.add_argument('-num_layers', type=int, default=1, help='number of layers in the LSTM')
     main_arg_parser.add_argument('-dropout',type=float, default=0.4,help='dropout for regularization, used after each RNN hidden layer. 0 = no dropout')
     main_arg_parser.add_argument('-dropoutrec',type=float,default=0.1,help='dropout for regularization, used after each c_i. 0 = no dropout')
-    main_arg_parser.add_argument('-enc_seq_length',type=int, default=40,help='number of timesteps to unroll for')
+    main_arg_parser.add_argument('-enc_seq_length',type=int, default=70,help='number of timesteps to unroll for')
     main_arg_parser.add_argument('-dec_seq_length',type=int, default=100,help='number of timesteps to unroll for')
     main_arg_parser.add_argument('-batch_size',type=int, default=20,help='number of sequences to train on in parallel')
     #main_arg_parser.add_argument('-batch_size',type=int, default=2,help='number of sequences to train on in parallel')
