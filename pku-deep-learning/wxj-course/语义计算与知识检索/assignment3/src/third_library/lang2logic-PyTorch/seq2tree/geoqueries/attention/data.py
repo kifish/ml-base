@@ -8,6 +8,39 @@ import random
 import numpy as np
 from util import convert_to_tree
 
+
+
+
+def test_vocab(opt):
+    word_manager = SymbolsManager(True)
+    word_manager.init_from_file(
+        "{}/train_vocab_q.txt".format(opt.data_dir), opt.min_freq, opt.max_vocab_size)
+    #word_manager.init_from_file("{}/vocab.q.txt".format(opt.data_dir), opt.min_freq, opt.max_vocab_size)
+    form_manager = SymbolsManager(True)
+    form_manager.init_from_file(
+        "{}/train_vocab_f.txt".format(opt.data_dir), 0, opt.max_vocab_size)
+    #form_manager.init_from_file("{}/vocab.f.txt".format(opt.data_dir), 0, opt.max_vocab_size)
+    print(word_manager.vocab_size)
+    print(form_manager.vocab_size)
+    print(form_manager.get_symbol_idx('chris_pine'))
+    try:
+        print(form_manager.get_symbol_idx('the_walking_dead_theme_song'))
+    except:
+        print('Not found')
+    word_token_set = set()
+    form_token_set = set()
+    with open('../../../../../../data/MSParS.simple.train','r',encoding='utf8') as f:
+        for line in f.readlines():
+            line = line.strip().split('\t')
+            words,forms = line[0].split(' '), line[1].split(' ')
+            for word in words:
+                word_token_set.add(word)
+            for form in forms:
+                form_token_set.add(form)
+    print('word token num:', len(word_token_set))
+    print('form token num:', len(form_token_set))
+
+
 def process_train_data(opt):
     time_start = time.time()
     word_manager = SymbolsManager(True)
@@ -54,23 +87,24 @@ def serialize_data(opt):
         pkl.dump(data, out_data)
     
    
+if __name__ == "__main__":   
+    main_arg_parser = argparse.ArgumentParser(description="parser")
+    main_arg_parser.add_argument("-data_dir", type=str, default="../data/",
+                                    help="data dir")
+    main_arg_parser.add_argument("-train", type=str, default="train",
+                                    help="train dir")
+    main_arg_parser.add_argument("-test", type=str, default="test",
+                                    help="test dir")
+    main_arg_parser.add_argument("-min_freq", type=int, default=0,
+                                    help="minimum word frequency")
+    main_arg_parser.add_argument("-max_vocab_size", type=int, default=50000,
+                                    help="max vocab size")
+    main_arg_parser.add_argument('-seed',type=int,default=123,help='torch manual random number generator seed')
 
-main_arg_parser = argparse.ArgumentParser(description="parser")
-main_arg_parser.add_argument("-data_dir", type=str, default="../data/",
-                                  help="data dir")
-main_arg_parser.add_argument("-train", type=str, default="train",
-                                  help="train dir")
-main_arg_parser.add_argument("-test", type=str, default="test",
-                                  help="test dir")
-main_arg_parser.add_argument("-min_freq", type=int, default=2,
-                                  help="minimum word frequency")
-main_arg_parser.add_argument("-max_vocab_size", type=int, default=15000,
-                                  help="max vocab size")
-main_arg_parser.add_argument('-seed',type=int,default=123,help='torch manual random number generator seed')
-
-args = main_arg_parser.parse_args()
-random.seed(args.seed)
-np.random.seed(args.seed)
-torch.manual_seed(args.seed)
-process_train_data(args)
-serialize_data(args)
+    args = main_arg_parser.parse_args()
+    random.seed(args.seed)
+    np.random.seed(args.seed)
+    torch.manual_seed(args.seed)
+    process_train_data(args)
+    serialize_data(args)
+    # test_vocab(args)

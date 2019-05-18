@@ -23,7 +23,7 @@ class SymbolsManager():
             # non-terminal symbol = 3
             self.add_symbol('<N>')
 
-    def add_symbol(self,s):
+    def add_symbol(self, s): 
         if s not in self.symbol2idx:
             self.symbol2idx[s] = self.vocab_size
             self.idx2symbol[self.vocab_size] = s
@@ -46,7 +46,7 @@ class SymbolsManager():
 
     def init_from_file(self, fn, min_freq, max_vocab_size):
         print("loading vocabulary file: {}\n".format(fn))
-        with open(fn, "r") as f:
+        with open(fn, "r",encoding='utf8') as f:
             for line in f:
                 l_list = line.strip().split('\t')
                 c = int(l_list[1])
