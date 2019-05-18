@@ -104,13 +104,41 @@ def gen_vocab():
         for k, v in logic_form_dict.items():
             f.write(k+'\t'+str(v)+'\n')
 
+def fill():
+    raw_file_path = args.pred_path
+    save_path = args.save_path
+    idx = 1
+    pattern1 = r'<parameters id=.*>\t(.*)\n'
+    with open('../data/MSParS.dev', encoding='utf8') as f:
+        text = f.read()
+    raw_lines = re.findall(pattern1,text)
+    del text
+    pattern2 = r'(?:\|\|\| ){0,1}([^ \|]*?) \(entity\)'
+    with open(raw_file_path,'r',encoding='utf8') as f1:
+        with open(save_path,'w',encoding='utf8') as f2:
+            for line in f1.readlines():
+                print('-----------')
+                print(idx)
+                raw_line = raw_lines[idx-1]
+                entity_list = re.findall(pattern2,raw_line)
+                for entity in entity_list:
+                    print(entity)
+                    line = line.replace('<U>',entity,1)
+                print('-----------')
+                f2.write(line)           
+                if idx >= 9000:
+                    break
+                idx += 1
 
 if __name__ == '__main__':
     main_arg_parser = argparse.ArgumentParser(description="parser")
     main_arg_parser.add_argument('-pred_path', type=str, default='../data/pred.txt', help='pred.txt')
+    main_arg_parser.add_argument(
+        '-save_path', type=str, default='../data/pred_filled.txt', help='pred.txt')
     # parse input params
     args = main_arg_parser.parse_args()
     #process_data()
     #gen_vocab()
     cal_acc()
+    #fill()
 
