@@ -137,7 +137,7 @@ if __name__ == "__main__":
                 print(ref_str)
                 print(cand_str)
                 print(' ')
-            output.write("{}\n".format(ref_str))
+            #output.write("{}\n".format(ref_str))
             output.write("{}\n".format(cand_str))
 
         val_acc = util.compute_tree_accuracy(candidate_list, reference_list, form_manager)
