@@ -103,6 +103,48 @@ def gen_vocab():
     with open('../data/train_vocab_f.txt', 'w', encoding='utf8') as f:
         for k, v in logic_form_dict.items():
             f.write(k+'\t'+str(v)+'\n')
+def enhance_data():
+    pattern1 = r'<question id=.*>\t(.*)\n'
+    pattern2 = r'<logical form id=.*>\t(.*)\n'
+    # train
+    with open('../data/MSParS.train',encoding='utf8') as f:
+        text = f.read()
+    source = re.findall(pattern1,text)
+    target = re.findall(pattern2,text)
+    assert len(source) == len(target)
+    n_sample = len(source)
+    print('train n_sample:',n_sample)
+    pattern3 = r'<parameters id=.*>\t(.*)\n'
+    pattern4 = r'(?:\|\|\| ){0,1}([^ \|]*?) \(entity\)'
+    raw_lines = re.findall(pattern3, text)
+    with open('../data/MSParS.entity.train','w',encoding='utf8') as f:
+        for idx in range(n_sample):
+            raw_line = raw_lines[idx]
+            entity_list = re.findall(pattern4,raw_line)
+            target_s = target[idx]
+            for entity in entity_list:
+                target_s = target_s.replace(entity,'<entity>',1)
+            f.write(source[idx] + '\t' + target_s + '\n')
+    # dev
+    with open('../data/MSParS.dev',encoding='utf8') as f:
+        text = f.read()
+    source = re.findall(pattern1,text)
+    target = re.findall(pattern2,text)
+    raw_lines = re.findall(pattern3, text)
+    assert len(source) == len(target)
+    n_sample = len(source)
+    print('dev n_sample:',n_sample)
+    with open('../data/MSParS.entity.dev','w',encoding='utf8') as f:
+        for idx in range(n_sample):
+            # print(idx)
+            raw_line = raw_lines[idx]
+            # print(raw_line)
+            entity_list = re.findall(pattern4,raw_line)
+            # print(entity_list)
+            target_s = target[idx]
+            for entity in entity_list:
+                target_s = target_s.replace(entity, '<entity>', 1)
+            f.write(source[idx] + '\t' + target_s + '\n')
 
 def fill():
     raw_file_path = args.pred_path
@@ -139,6 +181,6 @@ if __name__ == '__main__':
     args = main_arg_parser.parse_args()
     #process_data()
     #gen_vocab()
-    cal_acc()
+    #cal_acc()
     #fill()
-
+    enhance_data()
