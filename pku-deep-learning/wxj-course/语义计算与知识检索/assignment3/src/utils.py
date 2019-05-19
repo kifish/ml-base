@@ -165,7 +165,8 @@ def fill():
                 entity_list = re.findall(pattern2,raw_line)
                 for entity in entity_list:
                     print(entity)
-                    line = line.replace('<U>',entity,1)
+                    # line = line.replace('<U>',entity,1)
+                    line = line.replace('<entity>', entity, 1)
                 print('-----------')
                 f2.write(line)           
                 if idx >= 9000:
@@ -183,4 +184,4 @@ if __name__ == '__main__':
     #gen_vocab()
     #cal_acc()
     #fill()
-    enhance_data()
+    #enhance_data()
