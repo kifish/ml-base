@@ -216,12 +216,12 @@ def fill3():
                 print(idx)
                 entity_line = entity_lines[idx-1]
                 entity_list = entity_line.split(' ')
-                for idx,entity in enumerate(entity_list):
+                for i,entity in enumerate(entity_list):
                     if len(entity) == 0:
                         continue
                     print(entity)
                     # line = line.replace('<U>',entity,1)
-                    if idx == len(entity_list)-1:
+                    if i == len(entity_list)-1:
                         line = line.replace('<entity>', entity)
                     else:
                         line = line.replace('<entity>', entity, 1)
