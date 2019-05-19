@@ -177,7 +177,6 @@ def fill2():
     raw_file_path = args.pred_path
     save_path = args.save_path
     idx = 1
-    pattern1 = r'<parameters id=.*>\t(.*)\n'
     entity_lines = []
     with open('../data/dev_entity_pred_v2.txt', encoding='utf8') as f:
         for line in f.readlines():
@@ -201,6 +200,36 @@ def fill2():
                     break
                 idx += 1
 
+
+def fill3():
+    raw_file_path = args.pred_path
+    save_path = args.save_path
+    idx = 1
+    entity_lines = []
+    with open('../data/dev_entity_pred_v2.txt', encoding='utf8') as f:
+        for line in f.readlines():
+            entity_lines.append(line.strip())
+    with open(raw_file_path, 'r', encoding='utf8') as f1:
+        with open(save_path, 'w', encoding='utf8') as f2:
+            for line in f1.readlines():
+                print('-----------')
+                print(idx)
+                entity_line = entity_lines[idx-1]
+                entity_list = entity_line.split(' ')
+                for idx,entity in enumerate(entity_list):
+                    if len(entity) == 0:
+                        continue
+                    print(entity)
+                    # line = line.replace('<U>',entity,1)
+                    if idx == len(entity_list)-1:
+                        line = line.replace('<entity>', entity)
+                    else:
+                        line = line.replace('<entity>', entity, 1)
+                print('-----------')
+                f2.write(line)
+                if idx >= 9000:
+                    break
+                idx += 1
 if __name__ == '__main__':
     main_arg_parser = argparse.ArgumentParser(description="parser")
     main_arg_parser.add_argument('-pred_path', type=str, default='../data/pred.txt', help='pred.txt')
@@ -212,5 +241,6 @@ if __name__ == '__main__':
     #gen_vocab()
     #cal_acc()
     #fill()
-    fill2()
+    #fill2()
+    fill3()
     #enhance_data()
