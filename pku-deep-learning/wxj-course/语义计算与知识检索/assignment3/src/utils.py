@@ -179,9 +179,9 @@ def fill2():
     idx = 1
     pattern1 = r'<parameters id=.*>\t(.*)\n'
     entity_lines = []
-    with open('../data/dev_entity_pred_v2.dev', encoding='utf8') as f:
+    with open('../data/dev_entity_pred_v2.txt', encoding='utf8') as f:
         for line in f.readlines():
-            entity_lines.append(line)
+            entity_lines.append(line.strip())
     with open(raw_file_path,'r',encoding='utf8') as f1:
         with open(save_path,'w',encoding='utf8') as f2:
             for line in f1.readlines():
