@@ -29,7 +29,7 @@ def test_vocab(opt):
         print('Not found')
     word_token_set = set()
     form_token_set = set()
-    with open('../../../../../../data/MSParS.simple.train','r',encoding='utf8') as f:
+    with open('../../../../../../data/MSParS.entity.train','r',encoding='utf8') as f:
         for line in f.readlines():
             line = line.strip().split('\t')
             words,forms = line[0].split(' '), line[1].split(' ')
