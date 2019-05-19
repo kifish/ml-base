@@ -107,4 +107,4 @@ if __name__ == "__main__":
     torch.manual_seed(args.seed)
     process_train_data(args)
     serialize_data(args)
-    # test_vocab(args)
+    test_vocab(args)
