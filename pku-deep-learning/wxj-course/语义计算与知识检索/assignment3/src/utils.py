@@ -206,7 +206,9 @@ def fill3():
     save_path = args.save_path
     idx = 1
     entity_lines = []
-    with open('../data/dev_entity_pred_v2.txt', encoding='utf8') as f:
+    #dev:dev_entity_pred_v2.txt
+    #test:test_entity_pred_v2.txt
+    with open('../data/test_entity_pred_v2.txt', encoding='utf8') as f:
         for line in f.readlines():
             entity_lines.append(line.strip())
     with open(raw_file_path, 'r', encoding='utf8') as f1:
@@ -256,6 +258,6 @@ if __name__ == '__main__':
     #cal_acc()
     #fill()
     #fill2()
-    #fill3()
+    fill3()
     #enhance_data()
-    process_test_data()
+    #process_test_data()
