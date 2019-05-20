@@ -230,6 +230,20 @@ def fill3():
                 if idx >= 9000:
                     break
                 idx += 1
+
+
+def process_test_data():
+    pattern = r'<question id=.*>\t(.*)\n'
+    # test
+    with open('../data/MSParS.test', encoding='utf8') as f:
+        text = f.read()
+    source = re.findall(pattern, text)
+    n_sample = len(source)
+    print('test n_sample:', n_sample)
+    with open('../data/MSParS.simple.test', 'w', encoding='utf8') as f:
+        for idx in range(n_sample):
+            f.write(source[idx] + '\n')
+   
 if __name__ == '__main__':
     main_arg_parser = argparse.ArgumentParser(description="parser")
     main_arg_parser.add_argument('-pred_path', type=str, default='../data/pred.txt', help='pred.txt')
@@ -242,5 +256,6 @@ if __name__ == '__main__':
     #cal_acc()
     #fill()
     #fill2()
-    fill3()
+    #fill3()
     #enhance_data()
+    process_test_data()
