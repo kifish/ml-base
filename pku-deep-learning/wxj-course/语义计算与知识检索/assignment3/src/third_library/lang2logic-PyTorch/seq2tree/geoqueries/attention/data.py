@@ -76,12 +76,21 @@ def serialize_data(opt):
     managers = pkl.load( open("{}/map.pkl".format(opt.data_dir), "rb" ) )
     word_manager, form_manager = managers
     with open("{}/{}".format(opt.data_dir, opt.test), "r") as f:
-        for line in f:
-            l_list = line.split("\t")
-            w_list = word_manager.get_symbol_idx_for_list(l_list[0].strip().split(' '))
-            r_list = form_manager.get_symbol_idx_for_list(l_list[1].strip().split(' '))
-            cur_tree = convert_to_tree(r_list, 0, len(r_list), form_manager)
-            data.append((w_list, r_list, cur_tree))
+        if opt.is_test:
+            r_dummy_list = ['<U>','<U>'] #dummy data for test
+            for line in f.readlines():
+                w_list = word_manager.get_symbol_idx_for_list(line.strip().split(' '))
+                r_list = form_manager.get_symbol_idx_for_list(r_dummy_list)
+                cur_tree = convert_to_tree(
+                    r_list, 0, len(r_list), form_manager)
+                data.append((w_list, r_list, cur_tree))
+        else:
+            for line in f:
+                l_list = line.split("\t")
+                w_list = word_manager.get_symbol_idx_for_list(l_list[0].strip().split(' '))
+                r_list = form_manager.get_symbol_idx_for_list(l_list[1].strip().split(' '))
+                cur_tree = convert_to_tree(r_list, 0, len(r_list), form_manager)
+                data.append((w_list, r_list, cur_tree))
     out_datafile = "{}/test.pkl".format(opt.data_dir)
     with open(out_datafile, "wb") as out_data:
         pkl.dump(data, out_data)
@@ -95,6 +104,8 @@ if __name__ == "__main__":
                                     help="train dir")
     main_arg_parser.add_argument("-test", type=str, default="test",
                                     help="test dir")
+    main_arg_parser.add_argument("-is_test", type=bool, default=False,
+                                 help="dev or test")
     main_arg_parser.add_argument("-min_freq", type=int, default=0,
                                     help="minimum word frequency")
     main_arg_parser.add_argument("-max_vocab_size", type=int, default=50000,
