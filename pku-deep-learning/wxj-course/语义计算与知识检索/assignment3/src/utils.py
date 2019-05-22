@@ -245,7 +245,51 @@ def process_test_data():
     with open('../data/MSParS.simple.test', 'w', encoding='utf8') as f:
         for idx in range(n_sample):
             f.write(source[idx] + '\n')
-   
+
+def stat():
+    pattern1 = r'[0-9]+/[0-9]+/[0-9]+'
+    pattern2 = r'[0-9]+:[0-9]+'
+    cnt = 0
+    with open('../data/MSParS.simple.dev','r',encoding='utf8') as f:
+        for idx,line in enumerate(f.readlines()):
+            target = line.strip().split('\t')[1]
+            if re.search(pattern1, target) or re.search(pattern2, target):
+                print('--------')
+                print(idx+1)
+                print(target)
+                cnt += 1
+                print('--------')
+    print(cnt)
+    cnt = 0
+    print('test data:')
+    with open('../data/MSParS.simple.test', 'r', encoding='utf8') as f:
+        for idx, line in enumerate(f.readlines()):
+            target = line.strip()
+            if re.search(pattern1, target) or re.search(pattern2, target):
+                print('--------')
+                print(idx+1)
+                print(target)
+                cnt += 1
+                print('--------')
+    print(cnt)
+def submit():
+    targets = []
+    with open('../data/pred_recognized_entity_filled.txt', 'r', encoding='utf8') as f:
+        for line in f.readlines():
+            targets.append(line.strip())
+    with open('../data/MSParS.test', 'r', encoding='utf8') as f:
+        text = f.read() 
+    for idx in range(1,9001):
+        pattern = '<logical form id={}>\n'.format(idx)
+        base = '<logical form id={}>'.format(idx)
+        try:
+            text = text.replace(pattern,base + '\t' + targets[idx-1] + '\n')
+        except:
+            print(idx)
+            raise ValueError
+    with open('../data/submit.txt','w',encoding='utf8') as f:
+        f.write(text)
+               
 if __name__ == '__main__':
     main_arg_parser = argparse.ArgumentParser(description="parser")
     main_arg_parser.add_argument('-pred_path', type=str, default='../data/pred.txt', help='pred.txt')
@@ -255,9 +299,11 @@ if __name__ == '__main__':
     args = main_arg_parser.parse_args()
     #process_data()
     #gen_vocab()
+    #stat()
     #cal_acc()
     #fill()
     #fill2()
-    fill3()
+    #fill3()
     #enhance_data()
     #process_test_data()
+    submit()
