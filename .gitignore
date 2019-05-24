@@ -26,6 +26,7 @@ __pycache__/
 g2logic-PyTorch/seq2seq/geoqueries/attention/checkpoint/
 /pku-deep-learning/zzh-course/dataset
 /pku-deep-learning/zzh-course/baseline_full
+/pku-deep-learning/zzh-course/05-texture-network/models/
 .DS_Store
 Untitled.ipynb
 
