@@ -16,7 +16,8 @@ image_shape = (1, 224, 224, 3)
 
 '''you need to complete this method'''
 def get_l2_gram_loss_for_layer(noise, source, layer):
-
+    pass
+    
 
 def get_gram_loss(noise, source):
     with tf.name_scope('get_gram_loss'):
