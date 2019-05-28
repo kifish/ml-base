@@ -50,7 +50,7 @@ def main():
     noise = tf.Variable(tf.nn.sigmoid(pre_noise))
 
     '''load texture image, notice that the pixel value has to be normalized to [0,1]'''
-    image = cv2.imread('./images/red-peppers256.jpg')
+    image = cv2.imread('./images/robot.jpg')
     image = cv2.resize(image, image_shape[1:3])
     image = image.reshape(image_shape)
     image = (image/255).astype('float32')
