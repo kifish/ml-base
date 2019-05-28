@@ -8,7 +8,7 @@ vgg_mean = [0.485, 0.456, 0.406]
 vgg_std = [0.229, 0.224, 0.225]
 data = None
 dir_path = os.path.dirname(os.path.realpath(__file__))
-weights_path = os.path.abspath(dir_path + "./models/vgg16_onnx.npy")
+weights_path = os.path.abspath(dir_path + "/models/vgg16_onnx.npy")
 
 
 class Vgg16:
