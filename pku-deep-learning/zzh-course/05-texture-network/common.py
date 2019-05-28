@@ -19,7 +19,7 @@ class Config:
 
     exp_name = os.path.basename(log_dir)
     nr_channel = 3
-    nr_epoch = 5000
+    nr_epoch = 50000
     '''save the image every 10 epoch'''
     save_interval = 10
     '''show the training loss every 10 epoch'''
