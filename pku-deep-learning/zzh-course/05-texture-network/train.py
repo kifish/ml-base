@@ -26,7 +26,7 @@ def get_l2_gram_loss_for_layer(noise, source, layer):
     G = F * tf.transpose(F)
     loss = tf.reduce_sum(tf.pow(G_target - G,2)) / (4 * n_channel * n_channel * n_pixel * n_pixel)
     return loss 
-    
+
 
     
 
@@ -48,7 +48,7 @@ def main():
     noise = tf.Variable(tf.nn.sigmoid(pre_noise))
 
     '''load texture image, notice that the pixel value has to be normalized to [0,1]'''
-    image = cv2.imread('../../images/red-peppers256.jpg')
+    image = cv2.imread('./images/red-peppers256.jpg')
     image = cv2.resize(image, image_shape[1:3])
     image = image.reshape(image_shape)
     image = (image/255).astype('float32')
