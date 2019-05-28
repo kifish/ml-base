@@ -26,7 +26,7 @@ class Vgg16:
                 exit(0)
 
         if data is None:
-            data = np.load(vgg16_npy_path, encoding='latin1')
+            data = np.load(vgg16_npy_path, allow_pickle=True, encoding='latin1')
             self.data_dict = data.item()
             print("VGG16 weights loaded")
 
