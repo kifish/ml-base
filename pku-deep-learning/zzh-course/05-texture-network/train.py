@@ -12,7 +12,7 @@ import numpy as np
 '''use 13 convolution layers to generate gram matrix'''
 
 GRAM_LAYERS= ['conv1_1', 'conv1_2', 'conv2_1', 'conv2_2', 'conv3_1', 'conv3_2', 'conv3_3', 'conv4_1', 'conv4_2', 'conv4_3', 'conv5_1', 'conv5_2', 'conv5_3']
-SELECTED_LAYERS = ['conv1_1']
+SELECTED_LAYERS = ['pool1','pool2', 'pool3','pool4']
 image_shape = (1, 224, 224, 3)
 
 '''you need to complete this method'''
