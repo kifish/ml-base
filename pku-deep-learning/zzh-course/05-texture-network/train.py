@@ -21,17 +21,15 @@ def get_l2_gram_loss_for_layer(noise, source, layer):
     shape = source_feature_map.get_shape().as_list()
     n_channel = shape[-1]
     n_pixel = shape[1] * shape[2]
-    F_target = tf.reshape(source_feature_map,[-1,n_channel]) # n_pixel * n_channel  
-    G_target = tf.matmul(tf.transpose(F_target),F_target) #  n_channel * n_piexl * n_pixel * n_channel
-    F = tf.reshape(noise_feature_map, [-1, n_channel])
-    G = tf.matmul(tf.transpose(F),F)
-    loss = tf.reduce_sum(tf.pow(G_target - G,2)) / (4 * n_channel * n_channel * n_pixel * n_pixel)
+    F_target = tf.reshape(source_feature_map,[-1,n_pixel]) # n_channel * n_pixel
+    F = tf.reshape(noise_feature_map, [-1, n_pixel])
+    loss = tf.reduce_sum(tf.pow(tf.nn.top_k(F_target, n_pixel).values - tf.nn.top_k(F, n_pixel).values, 2))
     loss = loss * 255 * 255 * 13
     return loss 
 
 def get_gram_loss(noise, source):
     with tf.name_scope('get_gram_loss'):
-        gram_loss = [get_l2_gram_loss_for_layer(noise, source, layer) for layer in GRAM_LAYERS ]
+        gram_loss = [get_l2_gram_loss_for_layer(noise, source, layer) for layer in GRAM_LAYERS]
     return tf.reduce_mean(tf.convert_to_tensor(gram_loss))
 
 def output_img(session, x, save=False, out_path=None):
@@ -47,7 +45,7 @@ def main():
     noise = tf.Variable(tf.nn.sigmoid(pre_noise))
 
     '''load texture image, notice that the pixel value has to be normalized to [0,1]'''
-    image = cv2.imread('./images/robot.jpg')
+    image = cv2.imread('./images/red-peppers256.jpg')
     image = cv2.resize(image, image_shape[1:3])
     image = image.reshape(image_shape)
     image = (image/255).astype('float32')
