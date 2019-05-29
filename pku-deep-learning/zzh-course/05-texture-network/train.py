@@ -12,20 +12,24 @@ import numpy as np
 '''use 13 convolution layers to generate gram matrix'''
 
 GRAM_LAYERS= ['conv1_1', 'conv1_2', 'conv2_1', 'conv2_2', 'conv3_1', 'conv3_2', 'conv3_3', 'conv4_1', 'conv4_2', 'conv4_3', 'conv5_1', 'conv5_2', 'conv5_3']
+SELECTED_LAYERS = ['conv1_1', 'conv1_2', 'pool1','conv2_1', 'conv2_2', 'pool2', 'conv3_1', 'conv3_2', 'conv3_3','pool3']
+layer2weight = {'conv1_1': 1/12, 'conv1_2': 1/12, 'pool1': 1/12, 'conv2_1': 1/6, 'conv2_2': 1/6, 'pool2': 1/6, 'conv3_1': 1/16, 'conv3_2': 1/16, 'conv3_3': 1/16, 'pool3': 1/16}
 image_shape = (1, 224, 224, 3)
 
 '''you need to complete this method'''
 def get_l2_gram_loss_for_layer(noise, source, layer):
-    source_feature_map = getattr(source,layer)
-    noise_feature_map = getattr(noise,layer)
+    source_feature_map = getattr(source, layer)
+    noise_feature_map = getattr(noise, layer)
     shape = source_feature_map.get_shape().as_list()
     n_channel = shape[-1]
     n_pixel = shape[1] * shape[2]
-    F_target = tf.reshape(source_feature_map,[1,-1]) 
-    F = tf.reshape(noise_feature_map, [1, -1])
-    loss = tf.reduce_sum(tf.pow(tf.nn.top_k(F_target, n_pixel * n_channel).values - tf.nn.top_k(F, n_pixel * n_channel).values, 2))
-    loss = loss * 255 * 255 * 13
-    return loss 
+    F_target = tf.reshape(source_feature_map, [-1, n_channel]) # n_pixel * n_channel
+    G_target = tf.matmul(tf.transpose(F_target), F_target) # n_channel * n_piexl * n_pixel * n_channel
+    F = tf.reshape(noise_feature_map, [-1, n_channel])
+    G = tf.matmul(tf.transpose(F), F)
+    loss = tf.reduce_sum(tf.pow(G_target - G, 2)) / (4 * n_channel * n_channel * n_pixel * n_pixel)
+    loss = layer2weight[layer] * loss * 255 * 255 * 13
+    return loss
 
 def get_gram_loss(noise, source):
     with tf.name_scope('get_gram_loss'):
