@@ -12,6 +12,7 @@ import numpy as np
 '''use 13 convolution layers to generate gram matrix'''
 
 GRAM_LAYERS= ['conv1_1', 'conv1_2', 'conv2_1', 'conv2_2', 'conv3_1', 'conv3_2', 'conv3_3', 'conv4_1', 'conv4_2', 'conv4_3', 'conv5_1', 'conv5_2', 'conv5_3']
+SELECTED_LAYERS = ['conv1_1']
 image_shape = (1, 224, 224, 3)
 
 '''you need to complete this method'''
@@ -29,12 +30,10 @@ def get_l2_gram_loss_for_layer(noise, source, layer):
     loss = loss * 255 * 255 * 13
     return loss 
 
-
-    
-
 def get_gram_loss(noise, source):
     with tf.name_scope('get_gram_loss'):
-        gram_loss = [get_l2_gram_loss_for_layer(noise, source, layer) for layer in GRAM_LAYERS ]
+        gram_loss = [get_l2_gram_loss_for_layer(
+            noise, source, layer) for layer in SELECTED_LAYERS]
     return tf.reduce_mean(tf.convert_to_tensor(gram_loss))
 
 def output_img(session, x, save=False, out_path=None):
@@ -50,7 +49,7 @@ def main():
     noise = tf.Variable(tf.nn.sigmoid(pre_noise))
 
     '''load texture image, notice that the pixel value has to be normalized to [0,1]'''
-    image = cv2.imread('./images/robot.jpg')
+    image = cv2.imread('./images/red-peppers256.jpg')
     image = cv2.resize(image, image_shape[1:3])
     image = image.reshape(image_shape)
     image = (image/255).astype('float32')
