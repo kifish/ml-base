@@ -33,7 +33,7 @@ def get_l2_gram_loss_for_layer(noise, source, layer):
 
 def get_gram_loss(noise, source):
     with tf.name_scope('get_gram_loss'):
-        gram_loss = [get_l2_gram_loss_for_layer(noise, source, layer) for layer in GRAM_LAYERS]
+        gram_loss = [get_l2_gram_loss_for_layer(noise, source, layer) for layer in SELECTED_LAYERS]
     return tf.reduce_mean(tf.convert_to_tensor(gram_loss))
 
 def output_img(session, x, save=False, out_path=None):
