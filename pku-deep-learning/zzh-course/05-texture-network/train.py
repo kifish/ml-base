@@ -29,9 +29,6 @@ def get_l2_gram_loss_for_layer(noise, source, layer):
     loss = loss * 255 * 255 * 13
     return loss 
 
-
-    
-
 def get_gram_loss(noise, source):
     with tf.name_scope('get_gram_loss'):
         gram_loss = [get_l2_gram_loss_for_layer(noise, source, layer) for layer in GRAM_LAYERS ]
