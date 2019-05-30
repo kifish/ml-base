@@ -22,9 +22,9 @@ def get_l2_gram_loss_for_layer(noise, source, layer):
     shape = source_feature_map.get_shape().as_list()
     n_channel = shape[-1]
     n_pixel = shape[1] * shape[2]
-    source_feature_map = tf.transpose(source_feature_map,perms=[0,3,1,2])
+    source_feature_map = tf.transpose(source_feature_map,perm=[0,3,1,2])
     F_target = tf.reshape(source_feature_map, [-1, n_pixel]) # n_channel * n_pixel
-    noise_feature_map = tf.transpose(noise_feature_map,perms=[0,3,1,2])
+    noise_feature_map = tf.transpose(noise_feature_map,perm=[0,3,1,2])
     F = tf.reshape(noise_feature_map, [-1, n_pixel])
     loss = tf.reduce_sum(tf.pow(tf.nn.top_k(
         F_target, n_pixel).values - tf.nn.top_k(F, n_pixel).values, 2))
