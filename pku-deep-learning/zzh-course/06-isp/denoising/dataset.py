@@ -70,7 +70,7 @@ class Dataset():
                 x_start = 0 + self.rng.randint(0, (w - config.patch_size)//config.stride + 1 ) * config.stride
                 y_start = 0 + self.rng.randint(0, (h - config.patch_size)//config.stride + 1 ) * config.stride
                 patch = img[y_start:y_start+config.patch_size,x_start:x_start+config.patch_size,:].astype(np.float32)/255.0
-                noisy_patch = patch + np.random.normal(0, config.sigma/255.0, patch.shape)
+                noisy_patch = patch + np.random.normal(0, 55 * np.random.rand(1)[0]/255.0, patch.shape) # blind noise
                 yield patch.astype(np.float32), noisy_patch.astype(np.float32)
 
 

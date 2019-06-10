@@ -37,7 +37,7 @@ def main():
     args = parser.parse_args()
 
     ## load dataset
-    train_batch_gnr, train_set = get_dataset_batch(ds_name='train', noise_level = config.sigma)
+    train_batch_gnr, train_set = get_dataset_batch(ds_name='train')
 
     test_gnr, test_set = get_dataset_batch(ds_name = 'test', noise_level = config.sigma)
     ## build graph
