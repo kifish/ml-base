@@ -41,7 +41,7 @@ def main():
 
     test_gnr, test_set = get_dataset_batch(ds_name = 'test', noise_level = config.sigma)
     ## build graph
-    network = Model()
+    network = Model(20)
     placeholders, restored = network.build()
     gt = tf.placeholder(tf.float32, shape=(None, )+ (config.patch_size, config.patch_size)+ (config.nr_channel,), name = 'gt')
 

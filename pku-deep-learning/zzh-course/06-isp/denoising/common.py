@@ -22,7 +22,7 @@ class Config:
     show_interval = 2
     snapshot_interval = 2
     test_interval = 1
-    sigma = 50
+    sigma = 15
     use_extra_data = True
     scale = [1, 0.9, 0.8, 0.7]
     @property
