@@ -41,7 +41,7 @@ class Model():
 
         x = self._conv_layer(name='conv0', inp=data,
                              kernel_shape=[5, 5, config.nr_channel, 128], stride=1,
-                             is_training=is_training, include_bn = False) # Nx32x32x32
+                             is_training=is_training, include_bn = False) 
 
 
         for i in range(self.depth - 2):
