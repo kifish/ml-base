@@ -23,7 +23,7 @@ class Dataset():
 
     def __init__(self, dataset_name):
 
-        test_dataset_path = ['../../dataset/Set14/image_SRF_2']
+        test_dataset_path = ['../../dataset/Set14/']
         train_dataset_path = '../../dataset/Train91'
         self.minibatch_size = config.minibatch_size
         self.ds_name = dataset_name
@@ -35,7 +35,7 @@ class Dataset():
         train_list = glob.glob(train_dataset_path + '/*.png')
         test_list = []
         for single_test_dataset_path in test_dataset_path:
-            test_list = test_list + glob.glob(single_test_dataset_path + '/*LR.png')
+            test_list = test_list + glob.glob(single_test_dataset_path + '/*.png')
         self.dataset_meta = {
             'train': (train_list, 4992),
             'test': (test_list, len(test_list)),

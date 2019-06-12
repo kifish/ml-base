@@ -23,7 +23,7 @@ class Config:
     show_interval = 2
     snapshot_interval = 2
     test_interval = 1
-    ratio = 2
+    ratio = 3
     @property
     def input_shape(self):
         return (self.minibatch_size, self.nr_channel) + self.image_shape
