@@ -15,7 +15,7 @@ class Model():
         self.depth = depth
         self.reg = tf_contrib.layers.l2_regularizer(config.weight_decay)
 
-    def _conv_layer(self, name, inp, kernel_shape, stride, padding='SAME',is_training=False, include_bn = False, include_selu = True ):
+    def _conv_layer(self, name, inp, kernel_shape, stride, padding='SAME',is_training=False, include_bn = False, include_relu = True ):
         with tf.variable_scope(name) as scope:
             conv_filter = tf.get_variable(name='filter', shape=kernel_shape,
                                           initializer=self.weight_init, regularizer=self.reg)
@@ -26,8 +26,8 @@ class Model():
             x = tf.nn.bias_add(x, conv_bias, data_format='NHWC')
             if include_bn == True:
                 x = tf.layers.batch_normalization(x, axis=3, training=is_training)
-            if include_selu == True:
-                x = tf.nn.selu(x)
+            if include_relu == True:
+                x = tf.nn.relu(x)
         return x
 
 
@@ -48,7 +48,7 @@ class Model():
 
 
         x = self._conv_layer(name='conv' + str(self.depth), inp = x, kernel_shape=[3, 3, 64, config.nr_channel],
-                             stride=1, is_training=is_training, include_bn = False, include_selu = False)
+                             stride=1, is_training=is_training, include_bn = False, include_relu = False)
 
         output = data + x
 
