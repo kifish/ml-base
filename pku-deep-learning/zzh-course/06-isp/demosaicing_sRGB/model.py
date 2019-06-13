@@ -39,15 +39,15 @@ class Model():
 
 
         x = self._conv_layer(name='conv0', inp=data,
-                             kernel_shape=[3, 3, config.nr_channel, 128], stride=1,
+                             kernel_shape=[3, 3, config.nr_channel, 256], stride=1,
                              is_training=is_training) 
 
 
         for i in range(self.depth - 2):
-            x = self._conv_layer(name = 'conv'+ str(i+1), inp = x, kernel_shape = [3, 3, 128, 128 ], stride = 1, is_training = is_training )
+            x = self._conv_layer(name = 'conv'+ str(i+1), inp = x, kernel_shape = [3, 3, 256, 256 ], stride = 1, is_training = is_training )
 
 
-        x = self._conv_layer(name='conv' + str(self.depth), inp = x, kernel_shape=[3, 3, 128, config.nr_channel],
+        x = self._conv_layer(name='conv' + str(self.depth), inp = x, kernel_shape=[3, 3, 256, config.nr_channel],
                              stride=1, is_training=is_training, include_bn = False, include_relu = False)
 
         output = data + x
