@@ -40,6 +40,9 @@ svm
 ```
 
 
+http://59.108.48.5/lcwm/course/sckr2014/
+
+http://59.108.48.12/lcwm/course/sckr2019/?m=201904
 
 MSParS (V1.0): a Multi-perspective Semantic ParSing Dataset for Knowledge-based Question Answering      
 
