@@ -41,5 +41,13 @@ svm
 
 
 
+MSParS (V1.0): a Multi-perspective Semantic ParSing Dataset for Knowledge-based Question Answering      
 
+Open Domain Semantic Parsing
+ 
+natural language -> logical form
 
+http://tcci.ccf.org.cn/conference/2019/cfpt.php
+
+https://github.com/kifish/ml-base/blob/master/pku-deep-learning/wxj-course/%E8%AF%AD%E4%B9%89%E8%AE%A1%E7%AE%97%E4%B8%8E%E7%9F%A5%E8%AF%86%E6%A3%80%E7%B4%A2/assignment3/readme.md.txt
+codes in google drive
