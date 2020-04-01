@@ -1,4 +1,4 @@
-seq2tree  
+seq2tree + attention 
 PyTorch port of the paper "Language to Logical Form with Neural Attention"  
 https://arxiv.org/abs/1601.01280
 
