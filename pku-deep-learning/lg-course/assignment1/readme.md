@@ -20,3 +20,16 @@ https://www.cs.toronto.edu/~kriz/cifar.html
 
 
 
+
+
+图像数据集benchmark：
+http://rodrigob.github.io/are_we_there_yet/build/classification_datasets_results.html
+
+requirements:   
+keras 2.2.4    
+tensorflow 1.12.0    
+numpy 1.15.4   
+python 3.6.4
+
+
+
