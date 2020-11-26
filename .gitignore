@@ -1,3 +1,8 @@
+
+
+.vscode
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -29,6 +34,15 @@ g2logic-PyTorch/seq2seq/geoqueries/attention/checkpoint/
 /pku-deep-learning/zzh-course/dataset
 /pku-deep-learning/zzh-course/baseline_full
 /pku-deep-learning/zzh-course/05-texture-network/models/
+
+*checkpoint*/
+*train_log*/
+
+
+pku-deep-learning/zzh-course/05-texture-network/output*
+
+
+
 .DS_Store
 Untitled.ipynb
 
