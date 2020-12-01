@@ -44,4 +44,4 @@ svm
 
 --- semantic parsing
 
-[semantic parsing](https://github.com/kifish/ml-base/blob/master/pku-deep-learning/wxj-course/%E8%AF%AD%E4%B9%89%E8%AE%A1%E7%AE%97%E4%B8%8E%E7%9F%A5%E8%AF%86%E6%A3%80%E7%B4%A2/assignment3/readme.md)
+[semantic parsing](https://github.com/kifish/ml-base/tree/master/pku-deep-learning/wxj-course/%E8%AF%AD%E4%B9%89%E8%AE%A1%E7%AE%97%E4%B8%8E%E7%9F%A5%E8%AF%86%E6%A3%80%E7%B4%A2/project)
