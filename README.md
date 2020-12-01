@@ -8,7 +8,7 @@
 -- cs224d
 
 
--- pieces:
+-- pieces:     
 https://kifish.github.io/2018/04/27/python-logistic-regression/
 
 https://kifish.github.io/2018/04/27/python-kmeans/
